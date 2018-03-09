@@ -5,10 +5,10 @@ Eine dabei immer wieder auftretende Schwierigkeit ist es, die Skalierbarkeit des
 
 Bis vor einigen Jahren wurde diese Skalierbarkeit durch \glspl{acr-vm} gewährleistet. Doch neben großem Konfigurationsaufwand haben \glspl{acr-vm} auch einen großen Footprint und sind für viele  Anwendungen zu ineffizient. Eine Lösung für dieses Problem stellen Container.
 
-Diese Arbeit beschriebt die technische Funktionsweise von Containern, wie Container den Entwicklungszyklus unterstützen und wie sich Docker als führende Container-Technologie durchsetzen konnte. Zudem wird ein Blick auf aktuelle Container-Technologien geworfen und erklärt, wie \gls{acr-k8} und andere Cloud-Dienste helfen, Container-Cluster zu orchestrieren.
+Diese Arbeit untersucht die Möglichkeiten, die Container dem Entwicklungszyklus geben. Um ein grundlegendes Verständnis der Technologie zu vermitteln, werden die verwendeten Techniken hinter Container zu Beginn der Arbeit erklärt und anhand eines praktischen Beispiels näher beleuchtet. Dazu wird ein eigener Prozess in einer Linuxumgebung isoliert und so eine eigene Container-Laufzeitumgebung für diesen geschaffen.
 
-Zum Abschluss der Arbeit wird zudem ein Blick auf aktuelle Trends und die nahe Zukunft der Container-Technologie im Hinblick auf Serverlose Architekturen geworfen. 
+Im Anschluss wird ein historischer Blick auf die Container-Landschaft gegeben und untersucht, wie Docker der erfolgreichste Vertreter dieser Technologie wurde. Dabei wird vor allem auf die Anfänge der Isolierung und Virtualisierung eingegangen und historische Konzepte wie \glspl{acr-cgroup} näher beleuchtet.
 
-\section{Motivation}
-\label{sec:motivation}
-Ein entscheidendes Thema der IT, vor allem in den letzten Jahren, ist die Vernetzung in der Cloud. Eine der wichtigsten Technologien für den Durchbruch dieser Technik sind Container. Dabei stellt sich häufig die Frage, warum man im Rahmen von Containern immer Docker nutzt und nur wenig Konkurrenz am Markt besteht. Um ein allgemeines Verständnis der Technologie wie aber auch von Docker zu bekommen, ist es hilfreich, sich die unterliegenden Technologien wie auch andere Container-Laufzeiten anzuschauen.
+Im weiteren Teil der Ausarbeitung werden Vergleiche zwischen verschiedenen aktuell verwendeten Container-Laufzeitumgebungen gezogen und aufgezeigt, wie gut diese auf dem Markt aufgenommen werden. Dabei wird auch ein Blick in verschiedene Container-Orchestrierungsplattformen gegeben und aufgezeigt, welche Plattformen welche Technologien unterstützen.
+
+%Abschluss durch Serverlose Architektur, nur wenn die Zeit reicht
