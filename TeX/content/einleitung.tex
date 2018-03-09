@@ -1,2 +1,14 @@
 \chapter{Einleitung}
 \label{chap:einleitung}
+Die Welt wird immer stärker vernetzt. Durch den Drang, Anwendungen für viele Nutzer zugänglich zu machen besteht der Bedarf an Cloud-Diensten wie \gls{acr-aws}.
+Eine dabei immer wieder auftretende Schwierigkeit ist es, die Skalierbarkeit des Services zu gewährleisten. Selbst wenn viele Nutzer zeitgleich auch einen Service zugreifen, darf dieser nicht unter der Last zusammen brechen.
+
+Bis vor einigen Jahren wurde diese Skalierbarkeit durch \glspl{acr-vm} gewährleistet. Doch neben großem Konfigurationsaufwand haben \glspl{acr-vm} auch einen großen Footprint und sind für viele  Anwendungen zu ineffizient. Eine Lösung für dieses Problem stellen Container.
+
+Diese Arbeit beschriebt die technische Funktionsweise von Containern, wie Container den Entwicklungszyklus unterstützen und wie sich Docker als führende Container-Technologie durchsetzen konnte. Zudem wird ein Blick auf aktuelle Container-Technologien geworfen und erklärt, wie \gls{acr-k8} und andere Cloud-Dienste helfen, Container-Cluster zu orchestrieren.
+
+Zum Abschluss der Arbeit wird zudem ein Blick auf aktuelle Trends und die nahe Zukunft der Container-Technologie im Hinblick auf Serverlose Architekturen geworfen. 
+
+\section{Motivation}
+\label{sec:motivation}
+Ein entscheidendes Thema der IT, vor allem in den letzten Jahren, ist die Vernetzung in der Cloud. Eine der wichtigsten Technologien für den Durchbruch dieser Technik sind Container. Dabei stellt sich häufig die Frage, warum man im Rahmen von Containern immer Docker nutzt und nur wenig Konkurrenz am Markt besteht. Um ein allgemeines Verständnis der Technologie wie aber auch von Docker zu bekommen, ist es hilfreich, sich die unterliegenden Technologien wie auch andere Container-Laufzeiten anzuschauen.
