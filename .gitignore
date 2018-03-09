@@ -1,0 +1,11 @@
+#Temp Files LaTeX
+*.aux
+*.lof
+*.bcf
+*.log
+*.lol
+*.lot
+*.out
+*.xml
+*.gz
+*.toc

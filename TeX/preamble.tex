@@ -1,0 +1,98 @@
+% !TeX spellcheck = de_De
+\documentclass[
+fontsize=11pt,
+bibtoto,				%Literaturverzeichnis in Inhaltsverzeichnis aufnehmen
+liststotoc,
+idxtotocnumbered,
+parskip,
+oneside,
+DIVcalc,
+table
+]{scrbook}
+
+%Using Directives
+%Deutsche Sprache und Buchstaben
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+
+%Bilder, Grafiken
+\usepackage{graphicx}
+
+%Tabellen
+\usepackage{booktabs}
+
+%Codelistings
+\usepackage{listingsutf8}
+\lstset{inputencoding=utf8/latin1,
+	captionpos=b, 		%Beschriftung unter Listing
+	frame=single,		%Rahmen um Listing
+}
+
+%Formeln
+\usepackage{amsmath}
+
+%Literaturverzeichnis
+\usepackage[
+backend=biber,			%Biber statt Biblatex, da biber zuverlässiger funktioniert
+style=iso-authoryear,	%ISO 690 Style, (Author, Jahr)
+natbib					%befehle citep und citet für klammern um Quellenangabe
+]{biblatex}
+\bibliography{literatur}
+
+%Glossar
+\usepackage[
+toc,					%Eintrag im Inhaltsverzeichnis
+acronym					%Acronyme mit drucken
+]{glossaries}
+
+%Nicht indiziertes Inhaltsverzeichnis, sortiert durch LaTeX, keine Umlaute in Kürzeln, weil sonst Probleme
+\makenoidxglossaries
+%laden der glossar Datei für alle Einträge
+\loadglsentries{glossar}
+
+%Header und Footer Formatierung
+\usepackage{fancyhdr}
+%redefiniert plain style für Chapter seiten (Erste seite des Chapters)
+\fancypagestyle{plain}
+{
+	\fancyhf{}
+	\fancyfoot[R]{\thepage}
+	\fancyfoot[L]{\thetitle}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0.4pt}
+}
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+
+%allgemein genutzer style, beschriftung des Chapters
+\fancyhf{}
+\fancyfoot[L]{\thetitle}
+\fancyhead[L]{\leftmark}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+%Alle Pagestyles zu fancy setzen, ändert Kopf und Fußzeilen
+\pagestyle{fancy}
+
+%befehle \thisauthor und \thistitle um Title und Autor nur einmalig zu setzen und nicht immer wieder, wichtig für Fußzeile
+\usepackage{titling}
+
+%Tikz ist kein Zeichenprogramm
+\usepackage{tikz}
+
+%Fancy Referenzen
+\usepackage[
+german,		%Deutsche Begriffe (z.B. Abblidung statt Figure)
+plain		%Sytle der Referenz, normaler Text
+ ]{fancyref}
+
+%Link zu seiten usw.
+\usepackage[
+hidelinks		%Keine roten Boxen um Links
+]{hyperref}
+
+%Färben von einzelnen Stellen (genutzt für Tabellen)
+\usepackage{xcolor}
+
+%Testtext
+\usepackage{blindtext}

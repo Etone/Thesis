@@ -1,0 +1,10 @@
+%Image Makro, Welches Bild, Caption und alternativer Text
+\newcommand{\image}[3]{
+	\begin{figure}[h]
+		\begin{center}
+			\label{#3}
+			\includegraphics{#1}
+			\caption{#2}
+		\end{center}
+	\end{figure}
+}
