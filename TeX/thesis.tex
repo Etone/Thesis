@@ -1,4 +1,3 @@
-% !TeX spellcheck = de_De
 \include{preamble}
 
 \title{Evaluierung verschiedener Container Technologien}
@@ -9,13 +8,18 @@
 	
 	\input{title}
 	
+	\pagenumbering{roman}
 	\input{erklaerung}
 	
+	\input{zusammenfassung}
+	
 	\tableofcontents
-	\addtocontents{toc}{\protect\thispagestyle{empty}}
+	\addtocontents{toc}{\protect\thispagestyle{front}}
+	
 	
 	\mainmatter
-	\input{content/zusammenfassung}
+	\pagestyle{main}
+	\pagenumbering{arabic}
 	\input{content/einleitung}
 	\input{content/grundlagen}
 	
