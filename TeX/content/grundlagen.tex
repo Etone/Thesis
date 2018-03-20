@@ -9,18 +9,30 @@ Um ein besseres Verständnis für die Funktionsweise und benötigte Technologien
 
 \subsection{Open Container Initiative}
 \label{sec:oci}
-Die \gls{acr-oci} ist eine Initiative, die seit 2015 unter der Linux Foundation agiert. Das Ziel der \gls{acr-oci} ist es, einen offenen Standard für Container zu schaffen, sodass die Wahl der Container-Laufzeitumgebung nicht mehr zu Inkompatibilität führt. Dabei liegt der Fokus auf eine einfache, schlanke Implementierung \citep{OpenContainerInitiative}.
+Die \oci ist eine Initiative, die seit 2015 unter der Linux Foundation agiert. Das Ziel der \oci ist es, einen offenen Standard für Container zu schaffen, sodass die Wahl der Container-Laufzeitumgebung nicht mehr zu Inkompatibilität führt. Dabei liegt der Fokus auf eine einfache, schlanke Implementierung \citep{OpenContainerInitiative}.
 
-Die \gls{acr-oci}  arbeitet aktuell an zwei Spezifikationen. Die runtime-spec standardisiert die Laufzeitumgebung  von Containern. Dabei wird festgelegt, welche Konfiguration, Prinzipien und Schnittstellen Laufzeitumgebungen stellen müssen. Die runtime-spec wird mit der Beispielimplementierung der \gls{acr-oci} runC implementiert. Dabei ruft runC \gls{acr-os} Funktionen über die Binary libcontainer auf, die mittlerweile in die \gls{acr-oci} übergegangen ist. Docker und \gls{acr-cf} nutzen runC als Container-Laufzeitumgebung.
+Die \oci arbeitet aktuell an zwei Spezifikationen. Die runtime-spec standardisiert die Laufzeitumgebung  von Containern. Dabei wird festgelegt, welche Konfiguration, Prinzipien und Schnittstellen Laufzeitumgebungen stellen müssen. Um die Umsetzung der runtime-spec zu fördern, stellt die \oci eine beispielhafte Implementierung durch runC. \\
 
-Das zweite Projekt der \gls{acr-oci} ist die image-spec. Dieses versucht einen Standard für \glspl{gls-image} zu definieren. Als Grundlage des Standards dient das \gls{gls-image} Format, welches von Docker, \gls{acr-rkt} und anderen Laufzeitumgebungen genutzt wird.
-\todo{Image Std und Docker Images verstehen}
+Das zweite Projekt der \oci ist die image-spec. Dieses versucht einen Standard für \glspl{gls-image} zu definieren. Dabei plant die \oci nicht, vorhandene \Image Formate zu ersetzen, sondern auf diesen Aufzubauen und sie zu erweitern \citep{OpenContainerInitiative}.
 
 \subsection{Cloud Native Computing Foundation}
 \label{sec:cncf}
+\todo{CNCF beschreiben (containerd, K8, ...)}
 
 \section{Funktionsweise}
 \label{sec:funktionsweise}
 
+Container isolieren einzelne Prozesse durch verschiedene Kernel Technologien, die im Folgenden erklärt werden sollen.
+\subsection{Change Root}
+\label{sec:chroot}
+\chroot ist ein Unix Systemaufruf, der es erlaubt einen Prozess in einem anderen Wurzelverzeichnis auszuführen \citep{Chroot1LinuxManualPage}. Daraus folgt, dass der Prozess in einer eigenen Verzeichnisstruktur arbeitet und keine Änderungen am Dateisystem des Hosts machen kann. \chroot erlaubt somit die Isolierung des Dateisystems durch Container.
+
+\subsection{Control Groups}
+\label{sec:cgroups}
+
+\todo{RunC Erklärung und ausführliche Beschreibung (libcontainer, runC, containerd ?, ...}
+
 \section{Eigene Implementierung}
 \label{sec:eigeneImpl}
+
+Um die technischen Grundlagen zu vertiefen wurde eine eigene Container-Runtime entwickelt, die einen in Python geschriebenen Prozess isoliert und vom Hostsystem abschottet.

@@ -13,5 +13,8 @@
 *.bbl
 *.bak
 *.sav
-
 *.tdo
+
+#Vagrant temp files
+Vagrant/\.vagrant/
+Vagrant/\.sudo_as_admin_successful
