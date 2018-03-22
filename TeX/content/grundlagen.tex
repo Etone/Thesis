@@ -38,9 +38,9 @@ Die OCI arbeitet aktuell an zwei Spezifikationen. Die runtime-spec standardisier
 			Runtime					& \faCheck	& \faCheck	& runC 				& appc runtime Spec		\\
 			\bottomrule
 		\end{tabular}
-		\caption{Standards OCI und AppC im Vergleich \citep{MakingSenseofContainerStandardsandFoundations:OCICNCFAppcandRkt}}
-		\label{tab:ociVSappc}
 	\end{center}
+	\caption{Standards OCI und AppC im Vergleich \citep{MakingSenseofContainerStandardsandFoundations:OCICNCFAppcandRkt}}
+	\label{tab:ociVSappc}
 \end{table}
 
 Das zweite Projekt der OCI ist die image-spec. Dieses versucht einen Standard für \glspl{gls-image} zu definieren. Dabei plant die OCI nicht, vorhandene Image-Formate zu ersetzen, sondern auf diesen Aufzubauen und sie zu erweitern \citep{OpenContainerInitiative}.
@@ -71,17 +71,72 @@ Container isolieren einzelne Prozesse durch verschiedene \gls{gls-kernel}-Techno
 
 \subsection{Control Groups}
 \label{sec:cgroups}
-\glspl{acr-cgroup} dienen dazu, Systemressourcen für einzelne Prozesse zu limitieren. \todo{beschreibe cgroups, siehe \citep{ControlGroupV2}}
+\glspl{acr-cgroup} dienen dazu, Systemressourcen für einzelne Prozesse zu limitieren. \Glspl{acr-cgroup} sind anders als \gls{acr-chroot} kein Unix-Feature sondern nur Teil des Linux-\glspl{gls-kernel}. Im \gls{acr-os} sind \glspl{acr-cgroup} als Dateihierarchie repräsentiert. Das gesamte \gls{acr-cgroup}-Dateisystem ist unter \texttt{/sys/fs/cgroup/} zu finden.
+
+\Glspl{acr-cgroup} stellen zur Steuerung verschiedene Controller zur Verfügung, die in \fref{sec:eigeneImpl} genauer betrachtet werden.
 
 \subsection{Namespaces}
 \label{sec:namespaces}
+Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt um diese globalen Ressourcen zu isolieren. Ein Namespace kapselt dabei einzelne Ressourcen. Veränderungen an diesen sind für alle Prozesse innerhalb desselben Namespaces sichtbar, allerdings außerhalb dieses unsichtbar \citep{Namespaces7LinuxManualPage}.
 
-\subsection{Windows Hyper-V Container}
-\label{sec:}
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{ll}
+			\toprule
+			Namespace			& Ressource				 				\\
+			\midrule
+			\Gls{acr-cgroup}	& \Gls{acr-cgroup}-Dateisystem 			\\
+			IPC					& System V IPC, POSIX Nachrichten 		\\
+			Network				& Netzwerk Geräte, Stacks, Ports, ...	\\
+			Mount				& Mount Punkte							\\
+			PID					& Prozess IDs							\\
+			User				& Nutzer und Gruppen IDs				\\
+			UTS					& Hostnamen und Domänennamen			\\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+	\caption{Linux Namespaces und verbundene Ressourcen \citep{Namespaces7LinuxManualPage}}
+	\label{tab:namespaces}
+\end{table}
 
-\todo{RunC Erklärung und ausführliche Beschreibung (libcontainer, runC, containerd ?, ...}
+\subsection{Mounting}
+\label{sec:mount}
+Durch die Isolation eines Prozesses und die Bedingung, das Container unveränderlich sein sollen stellt sich die Frage, wie man Containern Dateien aus dem Host-System zur Verfügung stellt. Dies ist vor allem wichtig, wenn bei Veränderung der Umgebung nicht den Container neu gestartet werden soll. Sollte zum Beispiel eine neue Datei durch einen Webserver zur Verfügung gestellt werden, möchte man nicht den Container neu starten. Die Lösung dieses Problems ist der Unix-Systembefehl \texttt{mount}. 
+
+Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des Dateibaums angeheftet. Durch dieses vorgehen kann man Ordner vom Host-System  für das mit \gls{acr-chroot} isolierte Dateisystem des Containers zugänglich machen.
+
+\dirtree{%
+	.1 /home.
+	.2 rootfs.
+	.3 bin.
+	.3 lib.
+	.3 var.
+	.4 src.\DTcomment{mounted von \texttt{/home/readonly/} }.
+	.5 \color{red}hungry.py.\DTcomment{kein symbolischer Link}.
+	.5 \color{red}port.py.\DTcomment{kein symbolischer Link}.
+	.3 other Linux directories.
+	.2 readonly.
+	.3 \color{red}hungry.py.
+	.3 \color{red}port.py.
+}
+
+Die obige Grafik zeigt einen Auszug eines Dateisystems, bei dem der Ordner \texttt{/home/readonly/} an die stelle \texttt{/home/rootfs/var/src/} gemounted wurde. Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Dieser hätte durch den Aufruf von \texttt{chroot} keine Wirkung für den Container, da dieser keine Verzeichnisse über \texttt{/home/rootfs/} kennt und annimmt, dieses wäre das Wurzelverzeichnis.
+
+\subsection{Netzwerk}
+\label{sec:netzwerk}
+\todo{netzwerk, security(capabilites, SELinux, AppArmor), container unter windows(Hyper-V, Windows Server 2016)}
+
+\subsection{Sicherheit}
+\label{sec:sicherheit}
+
+\subsection{Container unter Windows}
+\label{sec:windows}
+
+\subsection{Bibliotheken}
+\label{sec:libs}
+\todo{LXC, libcontainer, runC, containerd}
 
 \section{Eigene Implementierung}
 \label{sec:eigeneImpl}
 
-Um die technischen Grundlagen zu vertiefen wurde eine eigene Container-Runtime entwickelt, die einen in Python geschriebenen Prozess isoliert und vom Hostsystem abschottet.
+\todo{Eigene Impl}

@@ -13,6 +13,7 @@
 %	\input{danksagung}
 	\input{zusammenfassung}
 
+	\setcounter{tocdepth}{1}
 	\tableofcontents
 	\addtocontents{toc}{\protect\thispagestyle{front}}
 
@@ -21,6 +22,9 @@
 	\input{content/einleitung}
 	\input{content/grundlagen}
 	%\input{cheatsheet}
+	
+	%Marker für Inhaltsverzeichniss, Letze Seite = geschriebene Inhaltsseiten
+	\chapter{Letzte Inhaltsseite}
 	
 	\backmatter
 	\pagenumbering{Alph}
