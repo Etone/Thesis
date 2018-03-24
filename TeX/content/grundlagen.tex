@@ -124,13 +124,43 @@ Die obige Grafik zeigt einen Auszug eines Dateisystems, bei dem der Ordner \text
 
 \subsection{Netzwerk}
 \label{sec:netzwerk}
-\todo{netzwerk, security(capabilites, SELinux, AppArmor), container unter windows(Hyper-V, Windows Server 2016)}
+
+Einen weiteren Aspekt, den Container vom Host-\gls{acr-os} isolieren ist das Netzwerk. Dabei kommen virtuelle Ethernet-Adapter zum Einsatz. Diese erlauben es, ein unabhängiges Netzwerk zu erzeugen. Ein Ende des \gls{acr-veth} wird dabei der PID des Containers zugewiesen, das andere dem Host. Zusätzlich wird der Network-Namespace genutzt um eine vollständige Isolation des Netzwerks zu erhalten.
+
+\begin{figure}[h]
+	\begin{center}
+		\missingfigure{Netzwerk Graph für Container und Host?}
+		\caption{Netzwerkseparation zwischen Host und Container}
+		\label{fig:networkContainer}
+	\end{center}
+\end{figure}
 
 \subsection{Sicherheit}
 \label{sec:sicherheit}
+\begin{quote}
+	I have a co-worker who said: "Docker is about running random code downloaded from the Internet and running it as root"
+	\begin{flushright}
+		\small{---Dan Walsh(Red Hat)}
+	\end{flushright}
+\end{quote}
+
+Container haben ein großes Problem. Alle genannten \gls{gls-kernel}-Features müssen als Nutzer \texttt{root} ausgeführt werden. Dadurch hat der isolierte Prozess administrative Rechte und kann sich von der Isolation durch entsprechende Aufrufe befreien. Um dies zu verhindern, können verschiedene Sicherheitskonzepte der Linuxwelt verwendet werden.
+
+Das leichteste dieser Konzepte sind Capabilities. Jeder Benutzer, aber auch jeder Datei kann eine Liste an Capabilities zugeordnet oder genommen werden. Dabei können einzelnen Dateien beispielsweise die Rechte genommen werden, auf Port 80 zu hören. Auch viele Systemaufrufe können über Capabilites gewährt oder verwehrt werden. 
+
+Ein anderes Konzept ist die Implementation eines \textit{Mandatory Access Control}-Systems wie SELinux oder AppArmor. Diese Implementationen sind granularer als Capabilites, allerdings mit einem höheren Konfigurationsaufwand verbunden.
 
 \subsection{Container unter Windows}
 \label{sec:windows}
+Bislang wurden Container nur unter Linux verwendet. Viele \gls{gls-kernel}-Features des Linux-\glspl{gls-kernel} erlauben eine Isolation und wurden sogar teilweise spezifisch für diese entwickelt.
+
+Seit 2016 können spezifisch Docker-Container aber auch unter Windows genutzt werden. Dabei trennt Microsoft Container in zwei verschiedene Isolationen auf.
+
+Hyper-V Container, die unter Windows 10 genutzt werden sind nichts weiter als extrem abgespeckte Hyper-V \glspl{acr-vm}, die nur noch nötigste Features einer \gls{acr-vm} behalten. Dabei wird allerdings, nicht wie in \fref{fig:containerVsVm} dargestellt auch der \gls{gls-kernel} virtualisiert.
+
+Die zweite Alternative basiert auf Windows Server 2016 Container, die nur unter Windows Server Betriebssysteme funktionieren. Diese implementieren eine wirkliche Isolation durch den Windows-\gls{gls-kernel}.
+
+Unter Windows Server 2016 ist es möglich, die verwendete Isolierung durch ein Commandline Flag mitzugeben und zwischen den beiden Versionen zu switchen. 
 
 \subsection{Bibliotheken}
 \label{sec:libs}
