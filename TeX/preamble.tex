@@ -25,6 +25,8 @@ table
 \lstset{inputencoding=utf8/latin1,
 	captionpos=b, 		%Beschriftung unter Listing
 	frame=single,		%Rahmen um Listing
+	breaklines=true,	%Zeilenumbrüche im Source Code
+	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space} % Makiere mit Rotem Pfeil, dass es sich um Umbruch handelt
 }
 
 %Formeln
@@ -100,14 +102,15 @@ hidelinks		%Keine roten Boxen um Links
 
 %Durchgehende Beschriftungen von z.B. Abbildungen
 \usepackage{chngcntr}
-\counterwithout{figure}{chapter}
-\counterwithout{table}{chapter}
 
 %meherer Abbildungen nebeneinander
 \usepackage{subfigure}
 
 %Font Awesome Icons
 \usepackage{fontawesome}
+
+%Directory tree
+\usepackage{dirtree}
 
 %Testtext
 \usepackage{blindtext}

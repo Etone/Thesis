@@ -5,6 +5,11 @@
 
 \begin{document}
 	
+	%Entfernen der Chapter aus Counter. Manche werden erst mit begin{doc} initiiert
+	\counterwithout{figure}{chapter}
+	\counterwithout{table}{chapter}
+	\counterwithout{lstlisting}{chapter}
+	
 	\input{title}
 	
 	\frontmatter
@@ -13,14 +18,17 @@
 %	\input{danksagung}
 	\input{zusammenfassung}
 
+	\setcounter{tocdepth}{1}
 	\tableofcontents
 	\addtocontents{toc}{\protect\thispagestyle{front}}
 
 	\mainmatter
 	\pagestyle{main}
-	\input{content/einleitung}
-	\input{content/grundlagen}
+	\input{content.tex}
 	%\input{cheatsheet}
+	
+	%Marker für Inhaltsverzeichniss, Letze Seite = geschriebene Inhaltsseiten
+%	\chapter{Letzte Inhaltsseite}
 	
 	\backmatter
 	\pagenumbering{Alph}
