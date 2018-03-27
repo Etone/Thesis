@@ -5,6 +5,11 @@
 
 \begin{document}
 	
+	%Entfernen der Chapter aus Counter. Manche werden erst mit begin{doc} initiiert
+	\counterwithout{figure}{chapter}
+	\counterwithout{table}{chapter}
+	\counterwithout{lstlisting}{chapter}
+	
 	\input{title}
 	
 	\frontmatter
@@ -23,7 +28,7 @@
 	%\input{cheatsheet}
 	
 	%Marker für Inhaltsverzeichniss, Letze Seite = geschriebene Inhaltsseiten
-	\chapter{Letzte Inhaltsseite}
+%	\chapter{Letzte Inhaltsseite}
 	
 	\backmatter
 	\pagenumbering{Alph}
