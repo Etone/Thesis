@@ -12,7 +12,7 @@ Container werden häufig als leichtgewichtige \glspl{acr-vm} beschrieben. Dies i
 Dieses Kapitel behandelt alle benötigten Grundlagen, die zur Isolation eines Prozesses benötigt werden. Es werden vorhandene Standards wie die \gls{acr-oci} und benötigte Systemcalls wie \gls{acr-chroot} näher erläutert. Zudem wird beschrieben, wie die Isolation, die Container bieten, durch Systemmittel des Linux\glspl{gls-kernel} selber erreicht werden kann.
 \section{Standards}
 \label{sec:standards}
-
+Durch die immer größere Verwendung von Containern und die Verbreitung verschiedener Container-Runtimes ist die Standardisierung eine wichtige Aufgabe. Folgend werden Standardisierungsprojekte aufgezählt, die bestehenden Spezifikationen erläutert und aktuelle Aufgaben der Projekte näher betrachtet.
 \subsection{App Container}
 \label{sec:appc}
 \gls{acr-appc} ist ein Standard, der viele Aspekte innerhalb der Container-Landschaft behandelt. Dabei liegt die Hauptaufgabe darin, eine Laufzeitumgebung wie auch das \gls{gls-image}format und die Verbreitung von \glspl{gls-image} zu spezifizieren. Seit 2016 wird das Projekt nicht mehr aktiv weiterentwickelt. Bestandteile der \gls{acr-appc} wurden von der \gls{acr-oci} übernommen und dienen als Vorlage für die Spezifikation dieser.
@@ -49,7 +49,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \subsection{Cloud Native Computing Foundation}
 \label{sec:cncf}
-Die \gls{acr-cncf} beschäftigt sich im Gegensatz zur \gls{acr-oci} nicht nur mit Containern, sondern der kompletten \gls{gls-cloud}-Landschaft. Projekte wie \gls{acr-k8} und Prometheus werden durch die \gls{acr-cncf} weiterentwickelt und publiziert \citep{CloudNativeComputingFoundation}. Da der Cloud-Native Entwicklungsprozess von Containern getragen wird, spielen Technologien wie containerd und rkt eine entscheidende Rolle für die \gls{acr-cncf}.
+Die \gls{acr-cncf} beschäftigt sich im Gegensatz zur \gls{acr-oci} nicht nur mit Containern, sondern der kompletten \gls{gls-cloud}-Landschaft. Projekte wie \gls{acr-k8} und Prometheus werden durch die \gls{acr-cncf} weiterentwickelt und publiziert \cite{}. Da der Cloud-Native Entwicklungsprozess von Containern getragen wird, spielen Technologien wie containerd und rkt eine entscheidende Rolle für die \gls{acr-cncf}.
 
 \begin{figure}[h]
 	\begin{center}
@@ -105,22 +105,27 @@ Durch die Isolation eines Prozesses und die Bedingung, das Container unveränder
 
 Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des Dateibaums angeheftet. Durch dieses vorgehen kann man Ordner vom Host-System  für das mit \gls{acr-chroot} isolierte Dateisystem des Containers zugänglich machen.
 
-\dirtree{%
-	.1 /home.
-	.2 rootfs.
-	.3 bin.
-	.3 lib.
-	.3 var.
-	.4 src.\DTcomment{mounted von \texttt{/home/readonly/} }.
-	.5 \color{red}hungry.py.\DTcomment{kein symbolischer Link}.
-	.5 \color{red}port.py.\DTcomment{kein symbolischer Link}.
-	.3 other Linux directories.
-	.2 readonly.
-	.3 \color{red}hungry.py.
-	.3 \color{red}port.py.
-}
+Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Dieser hätte durch den Aufruf von \texttt{chroot} keine Wirkung für den Container, da dieser keine Verzeichnisse über \texttt{/home/rootfs/} kennt und annimmt, dieses wäre das Wurzelverzeichnis.
 
-Die obige Grafik zeigt einen Auszug eines Dateisystems, bei dem der Ordner \texttt{/home/readonly/} an die stelle \texttt{/home/rootfs/var/src/} gemounted wurde. Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Dieser hätte durch den Aufruf von \texttt{chroot} keine Wirkung für den Container, da dieser keine Verzeichnisse über \texttt{/home/rootfs/} kennt und annimmt, dieses wäre das Wurzelverzeichnis.
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{0.9\textwidth}
+		\dirtree{%
+			.1 /home.
+			.2 rootfs.
+			.3 var.
+			.4 src.\DTcomment{mounted von \texttt{/home/readonly/} }.
+			.5 \color{red}hungry.py.\DTcomment{kein symbolischer Link}.
+			.5 \color{red}port.py.\DTcomment{kein symbolischer Link}.
+			.3 \vdots.
+			.2 readonly.
+			.3 \color{red}hungry.py.
+			.3 \color{red}port.py.
+		}
+	\end{minipage}
+	\caption{Auszug aus Dateisystem mit gemounteten Dateien}
+	\label{fig:mountExample}
+\end{figure}
 
 \subsection{Netzwerk}
 \label{sec:netzwerk}
@@ -137,36 +142,188 @@ Einen weiteren Aspekt, den Container vom Host-\gls{acr-os} isolieren ist das Net
 
 \subsection{Sicherheit}
 \label{sec:sicherheit}
+
 \begin{quote}
-	I have a co-worker who said: "Docker is about running random code downloaded from the Internet and running it as root"
-	\begin{flushright}
-		\small{---Dan Walsh(Red Hat)}
-	\end{flushright}
+	\textit{"Docker is about running random code downloaded from the Internet and running it as root"}
+	\flushright
+	\small{---Dan Walsh (Red Hat)}
 \end{quote}
 
 Container haben ein großes Problem. Alle genannten \gls{gls-kernel}-Features müssen als Nutzer \texttt{root} ausgeführt werden. Dadurch hat der isolierte Prozess administrative Rechte und kann sich von der Isolation durch entsprechende Aufrufe befreien. Um dies zu verhindern, können verschiedene Sicherheitskonzepte der Linuxwelt verwendet werden.
 
-Das leichteste dieser Konzepte sind Capabilities. Jeder Benutzer, aber auch jeder Datei kann eine Liste an Capabilities zugeordnet oder genommen werden. Dabei können einzelnen Dateien beispielsweise die Rechte genommen werden, auf Port 80 zu hören. Auch viele Systemaufrufe können über Capabilites gewährt oder verwehrt werden. 
-
-Ein anderes Konzept ist die Implementation eines \textit{Mandatory Access Control}-Systems wie SELinux oder AppArmor. Diese Implementationen sind granularer als Capabilites, allerdings mit einem höheren Konfigurationsaufwand verbunden.
+Das leichteste dieser Konzepte sind Capabilities. Jeder Benutzer, aber auch jeder Datei kann eine Liste an Capabilities zugeordnet oder genommen werden. Dabei können einzelnen Dateien beispielsweise die Rechte genommen werden, auf Port 80 zu hören. Auch viele Systemaufrufe können über Capabilites gewährt oder verwehrt werden. Ein anderes Konzept ist die Implementation eines \textit{Mandatory Access Control}-Systems wie SELinux oder AppArmor. Diese Implementationen sind granularer als Capabilites, allerdings mit einem höheren Konfigurationsaufwand verbunden.
 
 \subsection{Container unter Windows}
 \label{sec:windows}
-Bislang wurden Container nur unter Linux verwendet. Viele \gls{gls-kernel}-Features des Linux-\glspl{gls-kernel} erlauben eine Isolation und wurden sogar teilweise spezifisch für diese entwickelt.
+Bislang wurden Container nur unter Linux verwendet. Viele \gls{gls-kernel}-Features des Linux-\glspl{gls-kernel} erlauben eine Isolation und wurden sogar teilweise spezifisch für diese entwickelt. Seit 2016 können spezifisch Docker-Container aber auch unter Windows genutzt werden. Dabei trennt Microsoft Container in zwei verschiedene Isolationen auf.
 
-Seit 2016 können spezifisch Docker-Container aber auch unter Windows genutzt werden. Dabei trennt Microsoft Container in zwei verschiedene Isolationen auf.
-
-Hyper-V Container, die unter Windows 10 genutzt werden sind nichts weiter als extrem abgespeckte Hyper-V \glspl{acr-vm}, die nur noch nötigste Features einer \gls{acr-vm} behalten. Dabei wird allerdings, nicht wie in \fref{fig:containerVsVm} dargestellt auch der \gls{gls-kernel} virtualisiert.
-
-Die zweite Alternative basiert auf Windows Server 2016 Container, die nur unter Windows Server Betriebssysteme funktionieren. Diese implementieren eine wirkliche Isolation durch den Windows-\gls{gls-kernel}.
-
-Unter Windows Server 2016 ist es möglich, die verwendete Isolierung durch ein Commandline Flag mitzugeben und zwischen den beiden Versionen zu switchen. 
-
-\subsection{Bibliotheken}
-\label{sec:libs}
-\todo{LXC, libcontainer, runC, containerd}
+Hyper-V Container, die unter Windows 10 genutzt werden sind nichts weiter als extrem abgespeckte Hyper-V \glspl{acr-vm}, die nur noch nötigste Features einer \gls{acr-vm} behalten. Dabei wird allerdings, nicht wie in \fref{fig:containerVsVm} dargestellt auch der \gls{gls-kernel} virtualisiert. Die zweite Alternative basiert auf Windows Server 2016 Container, die nur unter Windows Server 2016 und neueren Windows Server Betriebssystemen funktionieren. Diese implementieren eine wirkliche Isolation durch den Windows-\gls{gls-kernel}.
 
 \section{Eigene Implementierung}
 \label{sec:eigeneImpl}
+Um die in \fref{sec:funktionsweise} erläuterten \gls{gls-kernel}-Features näher zu beleuchten wird folgend gezeigt, wie ein Prozess isoliert vom Host-System ausführen kann. Dabei wird darauf eingegangen, wie ein \gls{gls-tarball}, durch das Tool buildroot erstellt werden kann, was am Beispiel eines \glspl{gls-tarball} mit der Python-Runtime gezeigt wird. Dieser lässt sich folgend in Container-Runtimes wie \gls{acr-rkt} importieren. Im folgenden wird dieser \gls{gls-tarball} mithilfe der \gls{gls-kernel}-Funktionen aus \fref{sec:funktionsweise} isoliert. Das Ergebnis ist ein Dateisystem innerhalb eines Host-\gls{acr-os}, indem  eine Instanz der Python-Runtime isoliert und ohne Root-Berechtigungen ausgeführt wird.
 
-\todo{Eigene Impl}
+\subsection{Erstellen eines Tarballs}
+\label{sec:tarball}
+Das Erzeugen eines \glspl{gls-tarball} ist durch das Tool buildroot einfach. Buildroot ist ein Unix-Tool, welches zur Erstellung von minimalistischen Linux-Distributionen für Embedded-Systems entworfen wurde. Es erlaubt aber auch, nur ein Dateisystem zu erzeugen, ohne \gls{gls-kernel} oder Init-System. Dieses Feature erlaubt es, ein \gls{gls-image} für Container zu erzeugen.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.5]{bilder/buildroot-menuconfig.png}
+		\caption{Buildroot Menü nach Start des Tools}
+		\label{fig:buildrootMenuConfig}
+	\end{center}
+\end{figure}
+
+Zudem erlaubt es buildroot, einzelne Bibliotheken, wie zum Beispiel die Python-Runtime, beim Build-Prozess der Distribution zu integrieren. Nach dem Einstellen der benötigten Bibliotheken und dem deaktivieren der, für Container, unnötigen Features erzeugt Buildroot eine Config-Datei, die all änderungen beinhaltet. Durch das Starten des Build-Prozesses mit dem Befehl \texttt{make} wird die gewünschte Linux-Distribution erstellt.
+
+Am Ende dieses Prozesses liegt im Ordner \texttt{/buildroot/out/images/} das gewünschte Dateisystem \texttt{rootfs.tar}.
+
+\subsection{Isolieren der Python-Runtime}
+\label{sec:isolieren}
+In \fref{sec:tarball} wurde ein Dateisystem mit der Python-Runtime erstellt. Dieses muss nun isoliert, ein Pythonprogramm in das Dateisystem gemounted und ausgeführt werden.
+
+Der in \fref{sec:tarball} erstellte \gls{gls-tarball} wird durch folgende \gls{acr-cli}-Befehle entpackt. 
+
+\lstset{
+	language=bash,
+	caption={Entpacken des buildroot Tarballs nach /home/rootfs/}
+}
+
+\begin{lstlisting}
+cd /home
+mkdir rootfs
+cp rootfs.tar rootfs/
+cd rootfs
+sudo tar xvf rootfs.tar
+sudo rm rootfs.tar
+\end{lstlisting}
+
+
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{0.9\textwidth}
+		\dirtree{%
+			.1 /home/rootfs/.
+			.2 usr.
+			.3 bin.
+			.4 python -> python3.6.\DTcomment{nicht aus Hostsystem}.
+			.4 python3.6.
+			.3 \vdots.
+			.2 \vdots.
+		}
+	\end{minipage}
+	\caption{Dateibaum nach entpacken der \texttt{rootfs.tar}}
+	\label{fig:baumNachUntar}
+\end{figure}
+
+Um einen Prozess mit dem Wurzelverzeichnis \texttt{/home/rootfs/} auszuführen, ist lediglich der folgende Aufruf nötig.
+\lstset{
+	language=bash,
+	caption=Shell-Commands um Python Webserver mit definierter Root zu starten
+}
+\begin{lstlisting}
+	sudo chroot rootfs /usr/bin/python3.6 -m http.server
+\end{lstlisting}
+
+Durch diesen wird ein Webserver auf Adresse \texttt{http://0.0.0.0:8000} ausgeführt, der alle ihm zugänglichen Dateien zum Download bereitstellt. Beim Aufrufen dieser Adresse erkennt man schnell, dass der Webserver nur Zugriff auf die in \texttt{/home/rootfs/} liegenden Dateien hat.
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.8]{bilder/chroot-python-webserver.png}
+		\caption{Python Webserver mit festgesetztem Root-Verzeichnis}
+		\label{fig:chrootPythonWebserver}
+	\end{center}
+\end{figure}
+
+Durch diese Dateitrennung tritt allerdings ein großes Problem aus. Der Python-Webserver wird mit erhöhten Rechten ausgeführt, da diese für den Aufruf von \texttt{chroot} benötigt werden.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[scale=1]{bilder/chroot-whoami-root.png}
+		\caption{Root-Eskalation durch Aufruf von \texttt{sudo chroot}}
+		\label{fig:chrootWhoami}
+	\end{center}
+\end{figure}
+
+Dies führt zu vielen Problemen. Ein Prozess, der nur auf diese Weise isoliert wird, könnte beispielsweise Prozesse auf dem Hostsystem mit \texttt{kill <pid>} beenden. Die Lösung dieses Problems sind die in \fref{sec:namespaces} beschriebenen namespaces.
+
+Um alle Prozesse des Hostsystems vor dem Container zu verstecken, muss der PID-Namespace des Container-Prozesses neu gemounted werden.
+\lstset{
+	language=bash,
+	caption={Remount des PID-Namespaces und Chroot einer Shell}
+}
+\begin{lstlisting}
+	sudo unshare -p --mount-proc=$PWD/rootfs/proc -f chroot rootfs /bin/sh
+\end{lstlisting}
+
+Beim Aufruf von "\lstinline[language=bash]{ps aux}" wird nur noch der Prozess \texttt{/bin/sh} angezeigt, der die PID 1 bekommen hat. Leider löst dieses Vorgehen nicht das Problem, dass noch immer die gestartete \texttt{/bin/sh} mit erhöhten Rechten ausgeführt wird. Ein Prozess, der auf diese Weise isoliert wird, kann zum Beispiel auf Port 80 hören. Um diese Berechtigungen zu entfernen werden die in \fref{sec:sicherheit} angesprochenen Capabilites verwendet.
+
+Da die isolierte Shell aktuell als Nutzer Root läuft und somit alle Capabilites hat, werden einzelne Capabilites entfernt.
+\lstset{
+	language=bash,
+	caption={Entfernen der Capabilty um auf Port 80 zu h\"oren}
+}
+\begin{lstlisting}
+	capsh --drop=cap_net_bind_service --chroot=rootfs/ --
+\end{lstlisting}
+
+Durch diesen Aufruf hat, die in \texttt{rootfs} gestartete \texttt{/bin/bash} nicht mehr die Möglichkeit, auf niedrigere Ports, wie Port 80 zu hören.
+
+Um vollständige Isolation des Containers zu erreichen, müssen allerdings auch Systemressourcen, wie Arbeitsspeicher oder CPU-Zyklen limitiert werden. Dazu dienen die in \fref{sec:cgroups} beschriebenen \glspl{acr-cgroup}.
+
+Dabei sind vor allem die vorhandenen Controller von Bedeutung. Diese erlauben durch Einträge in Dateien eine präzise Steuerung einzelner Systemressourcen.
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{ll}
+			\toprule
+			Controller 	& Ressource 												\\
+			\midrule
+			io			& Zugriff und Nutzung von Block Geräten wie Festplatten		\\
+			memory		& Monitoring und Beschränken des Arbeitsspeichers 			\\
+			pids		& Limitierung der Anzahl an Unterprozessen					\\
+			perf\_event	& Erlaubt Performance Monitoring der Prozesse				\\
+			rdma		& Zugriffe über RDMA limitieren oder sperren				\\
+			cpu			& CPU-Zyklen und maximale CPU-Bandwidth						\\
+			\bottomrule
+		\end{tabular}
+		\caption{\Glspl{acr-cgroup}-Controller und deren Verwendung \citep{Cgroups7LinuxManualPage}}
+		\label{tab:cgroupController}
+	\end{center}
+\end{table}
+
+Um eine \gls{acr-cgroup} zu erstellen, muss nur ein Ordner unterhalb des Wurzelverzeichnisses erstellt werden. Um einen Prozess einer \gls{acr-cgroup} zuzuordnen, wird die PID des Prozesses in die Datei \texttt{/sys/fs/cgroup/<controller>/<cgroupname>/tasks} geschrieben.
+
+\lstset{
+	language=bash,
+	caption={Erzeugen einer memory cgroup namens container}
+}
+\begin{lstlisting}
+	mkdir /sys/fs/cgroup/memory/container
+	echo "1111" > /sys/fs/cgroup/memory/container/tasks
+\end{lstlisting}
+
+Um festzusetzen, wie viel Arbeitsspeicher der isolierte Prozess nutzen darf, kann man innerhalb der \gls{acr-cgroup} einzelne Limits festlegen.
+\lstset{
+	language=bash,
+	caption={Limitieren maximaler Arbeisspecher und Swap deaktivieren}
+}
+\begin{lstlisting}
+	echo "0" > /sys/fs/cgroup/memory/container/memory.swappiness
+	echo "100000000" > /sys/fs/cgroup/memory/container/memory.limit_in_bytes
+\end{lstlisting}
+
+Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal 100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses.
+
+\lstset{
+	language=python,
+	caption={Python Programm um Arbeitsspeicher zu verbrauchen}
+}
+\lstinputlisting{./code/hungry.py}
+\begin{figure}[h]
+	 \begin{center}
+	 	\includegraphics[scale=1]{bilder/cgroup-container-killed.png}
+	 	\caption{Ausgabe des Pythonprogramms}
+	 	\label{fig:cgroupKilled}
+	 \end{center}
+\end{figure}
