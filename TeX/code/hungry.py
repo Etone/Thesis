@@ -1,3 +1,4 @@
+#hungry.py - Eating up memory in 10Mb blocks
 import time
 
 TEN_MEGABYTE = 10000000

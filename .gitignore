@@ -24,3 +24,5 @@ Vagrant/\.sudo_as_admin_successful
 *.old\.tex
 
 \.vscode/
+
+TeX/_minted-thesis/

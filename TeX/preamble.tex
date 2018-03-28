@@ -1,12 +1,11 @@
 \documentclass[
 fontsize=11pt,
-bibtoto,				%Literaturverzeichnis in Inhaltsverzeichnis aufnehmen
 liststotoc,
 idxtotocnumbered,
 parskip,
 oneside,
 DIVcalc,
-table
+table,
 ]{scrbook}
 
 %Using Directives
@@ -20,14 +19,12 @@ table
 %Tabellen
 \usepackage{booktabs}
 
-%Codelistings
-\usepackage{listingsutf8}
-\lstset{inputencoding=utf8/latin1,
-	captionpos=b, 		%Beschriftung unter Listing
-	frame=single,		%Rahmen um Listing
-	breaklines=true,	%Zeilenumbrüche im Source Code
-	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space} % Makiere mit Rotem Pfeil, dass es sich um Umbruch handelt
-}
+%Schönere Code Listings
+\usepackage{minted}
+
+%Frame um gewünschte Umgebung
+\usepackage{mdframed}
+\surroundwithmdframed{minted}
 
 %Formeln
 \usepackage{amsmath}

@@ -4,20 +4,17 @@
 \section{Motivation}
 \label{sec:motivation}
 Die Welt wird immer stärker vernetzt. Durch den Drang, Anwendungen für viele Nutzer zugänglich zu machen besteht der Bedarf an Cloud-Diensten wie \gls{acr-aws}.
-Eine dabei immer wieder auftretende Schwierigkeit ist es, die Skalierbarkeit des Services zu gewährleisten. Selbst wenn viele Nutzer gleichzeitig auf einen Service zugreifen, darf dieser nicht unter der Last zusammenbrechen.
+Eine dabei immer wieder auftretende Schwierigkeit ist es, die Skalierbarkeit der Services zu gewährleisten. Selbst wenn viele Nutzer gleichzeitig auf einen Service zugreifen, darf dieser nicht unter der Last zusammenbrechen. Bis vor einigen Jahren wurde diese Skalierbarkeit durch \glspl{acr-vm} gewährleistet. Doch neben großem Konfigurationsaufwand haben \glspl{acr-vm} auch einen großen Footprint und sind für viele  Anwendungen zu ineffizient. Eine Lösung für dieses Problem stellen Container dar.
 
-Bis vor einigen Jahren wurde diese Skalierbarkeit durch \glspl{acr-vm} gewährleistet. Doch neben großem Konfigurationsaufwand haben \glspl{acr-vm} auch einen großen Footprint und sind für viele  Anwendungen zu ineffizient. Eine Lösung für dieses Problem stellen Container dar.
-
-Diese Arbeit beschäftigt sich mit dem Thema Containering und zeigt auf, wie diese den Entwicklungszyklus für Entwickler und \gls{gls-devops} erleichtern.
+Diese Arbeit gibt einen Einblick in das Thema Containerring und beantwortet die Fragen, wie sich Docker als führende Technologie durchsetzen konnte, wie sich andere Technologien im Vergleich zu Docker schlagen und was die Zukunft in Form von Serverless-Technologien mit Bezug zu Containern bereithält.
 
 \section{Aufbau der Arbeit}
 \label{sec:aufbau}
-Zu Beginn dieser Arbeit werden die Grundlagen der Containertechnologie erklärt. Dabei wird darauf eingegangen, wie Container eine vollständige Isolation des Kernels schaffen. Um die technischen Grundalgen zu verstehen, wird eine eigene Abstraktion eines Container-Prozesses geschaffen.
+Zu Beginn der Arbeit werden benötigte Grundlagen der Technologie erläutert. Dabei werden bestehende Container-Standards betrachtet und alle benötigten Kernel-Funktionen erklärt, die in Container-Runtimes Verwendung finden. Um einen besseren Einblick in die Technologie zu geben wird gezeigt, wie man mit Bash-Befehlen ohne Container-Runtime einen Prozess von einem Host-OS trennt. Dabei wird darauf eingegangen, wie eine eigene Dateihierarchie isoliert werden kann, wie Namespaces dabei helfen Funktionen des Linux-Kernels zu virtualisieren.
 
-Dabei wird ein Prozess auf einem Linux Hostsystem vollständig isoliert und die Kapselung dieses gezeigt. Es wird erkenntlich, dass die Isolation einzelner Prozesse auf Linux durch Kernelfeatures ermöglicht wird.
+Im Anschluss wird die Frage beantwortet, wie Docker am verbreitetste Container-Engine wurde. Dazu wird die Geschichte der Technologie näher betrachtet.
 
-Folgend werden Standards für Container-Technologien aufgezählt. Diese sind in den letzten Jahren durch den Boom der Technologie unerlässlich geworden. Dabei wird vor allem der \gls{acr-oci} Standard näher beleuchtet, der sich durch die Vielzahl der kooperierenden Firmen durchsetzt.
+\todo{Geschichte, wie wurde Docker zu Docker}
 
-Im Folgenden wird ein Blick auf die Geschichte der Technologie geworfen und anhand dieser erklärt, wie Docker die am weitesten verbreitete Technologie wurde. Zudem werden alternative Softwarelösungen zu Docker vorgestellt und miteinander verglichen. Dabei soll ein Fokus auf die Aspekte Konfiguration, Sicherheit und Orchestrierung der Container gelegt werden.
-
-Zum Abschluss der Arbeit wird ein Blick in die Zukunft gewagt und Container im Zusammenhang mit Serverless Technologien gebracht.
+\todo{Vergleich Docker vs the World}
+\todo{Serverless, wenn zeit reicht}
