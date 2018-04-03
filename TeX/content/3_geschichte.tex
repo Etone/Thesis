@@ -1,2 +1,39 @@
 \chapter{Geschichte}
 \label{chap:geschichte}
+Um die Frage zu beantworten, wie Docker die führende Container-Technologie wurde, wird im Folgenden die Geschichte dieser betrachtet. Dabei liegt der Schwerpunkt auf Lösungen und Probleme der Technologien.
+\section{Zeitlicher Überblick}
+\label{sec:timeline}
+In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Container-Isolation gegeben. Diese zeigt Schritte in der Technologie, Entwickelte Container-Runtimes und aktuelle Themen wie die Orchestrierung von Containern.
+\begin{table}[h]
+	\newcommand{\style}{\color{LightSteelBlue3}\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
+	\begin{center}
+		\begin{tabular}{@{\,}r <{\hskip 2pt} !{\style} >{\raggedright\arraybackslash}p{7cm}}
+			\addlinespace[1.5ex]
+			\toprule
+			\multicolumn{2}{c}{\textbf{Benötigte Technologien}}		\\
+			1979 & Unix V7 											\\
+			2000 & FreeBSD Jails									\\
+			2001 & Linux VServer									\\
+			2004 & Solaris Container								\\
+			2005 & Open VZ											\\
+			2006 & Google Process Container							\\
+			\midrule
+			\multicolumn{2}{c}{\textbf{Container Runtimes}}			\\
+			2008 & LXC												\\
+			2011 & CF Warden										\\
+			2013 & \gls{acr-lmctfy}									\\
+			2013 & Docker											\\
+			2014 & rkt												\\
+			2015 & LXD												\\
+			\midrule
+			\multicolumn{2}{c}{\textbf{Orchestrierung und andere Themen}}\\
+			2014 & Entwicklung \gls{acr-k8} startet					\\
+			2016 & Container Security durch dirty COW				\\
+			2017 & Übernahme rkt und containerd in \gls{acr-cncf}	\\
+			
+			\bottomrule
+		\end{tabular}
+		\caption{Timeline der wichtigsten Container-Technologien \citep{ABriefHistoryofContainers:fromthe1970sto2017}}
+		\label{tab:timelineContainers}
+	\end{center}
+\end{table}
