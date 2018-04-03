@@ -12,14 +12,13 @@
 	\input{title}
 	
 	\frontmatter
-	\pagenumbering{Roman}
+	\pagestyle{front}
 	\input{erklaerung}
 %	\input{danksagung}
 	\input{zusammenfassung}
 
 	\setcounter{tocdepth}{1}
 	\tableofcontents
-	\addtocontents{toc}{\protect\thispagestyle{front}}
 
 	\mainmatter
 	\pagestyle{main}
@@ -30,6 +29,7 @@
 %	\chapter{Letzte Inhaltsseite}
 	
 	\backmatter
+	\pagestyle{back}
 	\pagenumbering{Alph}
 	\input{direcotries}
 	
