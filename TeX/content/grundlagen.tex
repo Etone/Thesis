@@ -146,14 +146,6 @@ Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des 
 
 Einen weiteren Aspekt, den Container vom Host-\gls{acr-os} isolieren ist das Netzwerk. Dabei kommen virtuelle Ethernet-Adapter zum Einsatz. Diese erlauben es, ein unabhängiges Netzwerk zu erzeugen. Ein Adapter der virtuellen Ethernet-Verbindung wird dabei der \gls{acr-pid} des Containers zugewiesen, das andere dem Host. Zusätzlich wird der Network-Namespace genutzt um eine vollständige Isolation des Netzwerks zu erhalten.
 
-\begin{figure}[h]
-	\begin{center}
-		\missingfigure{Netzwerk Graph für Container und Host?}
-		\caption{Netzwerkseparation zwischen Host und Container}
-		\label{fig:networkContainer}
-	\end{center}
-\end{figure}
-
 \subsection{Sicherheit}
 \label{sec:sicherheit}
 
@@ -217,12 +209,6 @@ Bei einem tarball handelt es sich um ein komprimiertes Dateisystem. Dabei wird e
 \end{figure}
 
 Zudem erlaubt es buildroot, einzelne Bibliotheken, wie zum Beispiel die Python-Runtime, beim Build-Prozess der Distribution zu integrieren. Nach dem Einstellen der benötigten Bibliotheken und dem deaktivieren der, für Container, unnötigen Features erzeugt Buildroot eine Config-Datei, die alle Änderungen beinhaltet. Durch das Starten des Build-Prozesses mit dem Befehl \texttt{make} wird die gewünschte Linux-Distribution erstellt. Am Ende dieses Prozesses liegt im Ordner \texttt{/buildroot/out/images/} das gewünschte Dateisystem \texttt{rootfs.tar}.
-
-\begin{figure}[H]
-	\includegraphics[scale=0.5]{bilder/buildroot-build.png}
-	\caption{Ausgabe während des Erstellens eines tarballs mit buildroot}
-	\label{fig:buildrootBuild}
-\end{figure}
 
 \subsection{Isolieren der Python-Runtime}
 \label{sec:isolieren}
