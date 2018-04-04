@@ -331,7 +331,7 @@ Um festzusetzen, wie viel Arbeitsspeicher der isolierte Prozess nutzen darf, kan
 	\caption{Limitieren des Arbeitsspeichers und Memory-Swap deaktivieren}
 \end{listing}
 
-Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal \tildeawesome100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses, der sich in der \gls{acr-cgroup} container befindet.
+Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal \tildeawesome100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm aus \fref{lst:hungry-py} ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses, der sich in der \gls{acr-cgroup} container befindet.
 
 \begin{listing}[h]
 	\begin{minted}[xleftmargin=-75pt]{python}

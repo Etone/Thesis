@@ -3,11 +3,11 @@
 Um die Frage zu beantworten, wie Docker die führende Container-Technologie wurde, wird im Folgenden die Geschichte dieser betrachtet. Dabei liegt der Schwerpunkt auf Lösungen und Probleme der Technologien.
 \section{Zeitlicher Überblick} 
 \label{sec:timeline} 
-In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Container-Isolation gegeben. Diese zeigt Schritte in der Technologie, Entwickelte Container-Runtimes und aktuelle Themen wie die Orchestrierung von Containern. 
+In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Container-Isolation gegeben. Diese zeigt Schritte in der Technologie, Entwickelte Container-Runtimes und aktuelle Themen wie die Entwicklung hinter Container-Ecosystems. 
 \begin{table}
 	\newcommand{\timeline}{\color{LightSteelBlue3}\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
 	\begin{center}
-		\begin{tabular}{@{\,}r <{\hskip 3pt} !{\timeline} >{\raggedright\arraybackslash}p{10cm}}
+		\begin{tabular}{@{\,}r <{\hskip 3pt} !{\timeline} >{\raggedright\arraybackslash}p{9cm}}
 			
 			\addlinespace[1.5ex]
 			\toprule
@@ -23,30 +23,47 @@ In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Co
 			2004 & Solaris Container								\\
 			2005 & Open VZ											\\
 			2006 & Google Process Container							\\
-			2007 & Process Container $\rightarrow$ Kernel als \gls{acr-cgroup}\\
+			2007 & Process Container in Linux Kernel als \glspl{acr-cgroup}\\
 			\midrule
-			\multicolumn{2}{c}{\textbf{Container Runtimes}}			\\
+			\multicolumn{2}{c}{\textbf{Container-Runtimes}}			\\
 			\midrule
 			2008 & LXC												\\
 			2011 & \gls{acr-cf} Warden								\\
 			2013 & \gls{acr-lmctfy}									\\
-				 & Docker											\\
-			2014 & rkt												\\
+				 & \gls{acr-cf} Graden, Umstieg auf Go				\\
+			2014 & \Gls{acr-appc} Spezifikation Release				\\
+				 & rkt												\\
 			2015 & LXD												\\
 				 & runC												\\
 			2016 & Windows Containers								\\
+				 & \gls{acr-cf} Guardian Release, Support für runC	\\
+			2017 & containerd v1.0.0								\\
+				 & cri-o											\\
 			\midrule
-			\multicolumn{2}{c}{\textbf{ Aktuelle Themen}}			\\
+			\multicolumn{2}{c}{\textbf{Aktuelle Themen}}			\\
 			\midrule
+			2011 & Initialer Release \gls{acr-cf}					\\
+			2013 & Release Docker, erstes Container Ecosystem		\\
 			2014 & Entwicklung \gls{acr-k8} startet					\\
 			2015 & Gründung \gls{acr-cncf}							\\
 				 & Gründung \gls{acr-oci}							\\
 				 & Docker Swarm										\\
-			2016 & Container Security rückt in Mittelpunkt - dirty COW\\
+			2016 & "Dirty Cow" $\rightarrow$ Container Sicherheit	\\
+				 & Apache Mesos v1.0.0 Release						\\
 			2017 & Übernahme rkt und containerd in \gls{acr-cncf}	\\
+				 & Release \gls{acr-oci} runtime-spec und image-spec\\
 			\bottomrule
 		\end{tabular}
+	\caption{Timeline Container-Technologien \citep{ABriefHistoryofContainers:fromthe1970sto2017}, \citep{DirtyCOWCVE20165195}, \citep{AppContainer}, \citep{ControlGroupV2}}
+	\label{tab:timelineContainers}
 	\end{center}
-\caption{Timeline Container-Technologien}
-\label{tab:timelineContainers}
 \end{table}
+
+\section{Entwicklung der Technologien}
+\label{sec:entwicklungTechnologien}
+
+\section{Container-Runtimes: von LXC zu containerd}
+\label{sec:lxc2containerd}
+
+\section{Container Eco-Systeme: Orchestrierung und Docker}
+\label{sec:ecosystems}
