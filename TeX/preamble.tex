@@ -51,6 +51,7 @@ acronym					%Acronyme mit drucken
 %Header und Footer Formatierung
 \usepackage{fancyhdr}
 
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\thechapter.\ #1}}{}}
 %redefiniert plain style für Chapter seiten (Erste seite des Chapters)
 \fancypagestyle{plain}
 {
@@ -72,11 +73,24 @@ acronym					%Acronyme mit drucken
 	\renewcommand{\footrulewidth}{0.4pt}
 }
 
-%genutzter stil für ehernwörtliche Erklärung, ToC und Zusammenfassung /Sperrvermerk
+%Genutzter stil für ehernwörtliche Erklärung, ToC und Zusammenfassung /Sperrvermerk
+%wenn länger als eine Seite, sonst plain
 \fancypagestyle{front}{
 	\fancyhf{}
 	\fancyfoot[R]{\thepage}
+	\fancyfoot[L]{\thetitle}
 	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0.4pt}	
+}
+
+%Genutzt für Anhang, keine Kopfleiste, alphabetische Seitenzahlen
+\fancypagestyle{back}{
+	\pagenumbering{Alph}
+	\fancyhf{}
+	\fancyfoot[R]{\thepage}
+	\fancyfoot[L]{\thetitle}
+	\fancyhead[L]{\leftmark}
+	\renewcommand{\headrulewidth}{0.4pt}
 	\renewcommand{\footrulewidth}{0.4pt}	
 }
 
@@ -88,6 +102,16 @@ acronym					%Acronyme mit drucken
 german,		%Deutsche Begriffe (z.B. Abblidung statt Figure)
 plain		%Sytle der Referenz, normaler Text
  ]{fancyref}
+ 
+%Hinzufügen von Listings mit lst
+\newcommand*{\fancyreflstlabelprefix}{lst}
+\fancyrefaddcaptions{german}{%
+	\newcommand*{\Freflstname}{Listing}%
+	\newcommand*{\freflstname}{\Freflstname}%
+}
+\frefformat{plain}{\fancyreflstlabelprefix}{%
+	\freflstname\fancyrefdefaultspacing#1%
+}
 
 %Link zu seiten usw.
 \usepackage[
