@@ -1,15 +1,15 @@
 \chapter{Geschichte}
 \label{chap:geschichte}
 Um die Frage zu beantworten, wie Docker die führende Container-Technologie wurde, wird im Folgenden die Geschichte dieser betrachtet. Dabei liegt der Schwerpunkt auf Lösungen und Probleme der Technologien.
-\section{Zeitlicher Überblick} 
-\label{sec:timeline} 
-In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Container-Isolation gegeben. Diese zeigt Schritte in der Technologie, Entwickelte Container-Runtimes und aktuelle Themen wie die Entwicklung hinter Container-Ecosystems. 
+\section{Zeitlicher Überblick}
+\label{sec:timeline}
+ 
+In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Container-Isolation gegeben. Diese zeigt Schritte in der Technologie, Entwickelte Container-Runtimes und aktuelle Themen wie die Entwicklung hinter Container-Ecosystems.
+ 
 \begin{table}
 	\newcommand{\timeline}{\color{LightSteelBlue3}\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
 	\begin{center}
 		\begin{tabular}{@{\,}r <{\hskip 3pt} !{\timeline} >{\raggedright\arraybackslash}p{9cm}}
-			
-			\addlinespace[1.5ex]
 			\toprule
 			\multicolumn{2}{c}{\textbf{Benötigte Technologien}}		\\
 			\midrule
@@ -24,10 +24,11 @@ In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Co
 			2005 & Open VZ											\\
 			2006 & Google Process Container							\\
 			2007 & Process Container in Linux Kernel als \glspl{acr-cgroup}\\
+			2012 & Erste Stabile Version der Sprache Go					\\
 			\midrule
 			\multicolumn{2}{c}{\textbf{Container-Runtimes}}			\\
 			\midrule
-			2008 & LXC												\\
+			2008 & \gls{acr-lxc}									\\
 			2011 & \gls{acr-cf} Warden								\\
 			2013 & \gls{acr-lmctfy}									\\
 				 & \gls{acr-cf} Graden, Umstieg auf Go				\\
@@ -40,13 +41,12 @@ In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Co
 			2017 & containerd v1.0.0								\\
 				 & cri-o											\\
 			\midrule
-			\multicolumn{2}{c}{\textbf{Aktuelle Themen}}			\\
+			\multicolumn{2}{c}{\textbf{Entwicklung Container-Ecosystem}}\\
 			\midrule
 			2011 & Initialer Release \gls{acr-cf}					\\
 			2013 & Release Docker, erstes Container Ecosystem		\\
 			2014 & Entwicklung \gls{acr-k8} startet					\\
-			2015 & Gründung \gls{acr-cncf}							\\
-				 & Gründung \gls{acr-oci}							\\
+			2015 & Gründung \gls{acr-cncf} und \gls{acr-oci}		\\
 				 & Docker Swarm										\\
 			2016 & "Dirty Cow" $\rightarrow$ Container Sicherheit	\\
 				 & Apache Mesos v1.0.0 Release						\\
@@ -54,16 +54,36 @@ In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Co
 				 & Release \gls{acr-oci} runtime-spec und image-spec\\
 			\bottomrule
 		\end{tabular}
-	\caption{Timeline Container-Technologien \citep{ABriefHistoryofContainers:fromthe1970sto2017}, \citep{DirtyCOWCVE20165195}, \citep{AppContainer}, \citep{ControlGroupV2}}
+	\caption{Timeline Container-Technologien \citep{ABriefHistoryofContainers:fromthe1970sto2017}}
 	\label{tab:timelineContainers}
 	\end{center}
 \end{table}
 
-\section{Entwicklung der Technologien}
-\label{sec:entwicklungTechnologien}
-
-\section{Container-Runtimes: von LXC zu containerd}
+\section{Container-Engines: Von LXC zu Docker}
 \label{sec:lxc2containerd}
+Wie in \fref{tab:timelineContainers} zu sehen, sind Container keine neue Erfindung. Bereits 2008 wurde die erste volle Implementierung einer Container-Runtime mit \gls{acr-lxc} veröffentlicht. Im folgenden Abschnitt wird ein Blick auf Container-Runtimes in der Vergangenheit geworfen und die Frage geklärt, wie Docker so erfolgreich wurde. Dazu werden Probleme älterer Engines anhand eines Beispiels aufgezeigt und Lösungen, die jüngere Schritte mit sich bringen, erklärt.
+\todo{Welches Beispiel?}
 
-\section{Container Eco-Systeme: Orchestrierung und Docker}
-\label{sec:ecosystems}
+\todo{Basically Everything, das Chapter schreiben}
+
+\subsection{Vor LXC: Isolation mit Kernelpatches und Virtualisierung}
+\label{sec:geschichteVorLXC}
+
+\subsection{LXC: Erste Schritte in Container-Runtimes}
+\label{sec:geschichteLXC}
+
+\subsection{CF Warden: Innovation durch Vereinfachung}
+\label{sec:geschichteCFWarden}
+
+\subsection{Go: Bedeutung der Sprache für Container}
+\label{sec:geschichteGo}
+\todo{Exkursion? Oder Streichen}
+
+\subsection{LMCTFY: Open-Source und Kooperation}
+\label{sec:geschichteLMCTFY}
+
+\subsection{Docker: Ecosystem, Runtime und \gls{acr-saas} in einem}
+\label{sec:geschichteDocker}
+
+\section{Aktuelle Probleme und Lösungen: Orchestrierung, Sicherheit und Standards}
+\label{sec:geschichteAktuell}
