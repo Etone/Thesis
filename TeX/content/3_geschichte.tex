@@ -6,8 +6,8 @@ Um die Frage zu beantworten, wie Docker die führende Container-Technologie wurd
  
 In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Container-Isolation gegeben. Diese zeigt Schritte in der Technologie, Entwickelte Container-Runtimes und aktuelle Themen wie die Entwicklung hinter Container-Ecosystems.
  
-\begin{table}
-	\newcommand{\timeline}{\color{LightSteelBlue3}\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
+\begin{table}[h]
+	\providecommand{\timeline}{\color{LightSteelBlue3}\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
 	\begin{center}
 		\begin{tabular}{@{\,}r <{\hskip 3pt} !{\timeline} >{\raggedright\arraybackslash}p{9cm}}
 			\toprule
@@ -61,13 +61,16 @@ In \fref{tab:timelineContainers} wird ein Überblick über die Geschichte der Co
 
 \section{Container-Engines: Von LXC zu Docker}
 \label{sec:lxc2containerd}
-Wie in \fref{tab:timelineContainers} zu sehen, sind Container keine neue Erfindung. Bereits 2008 wurde die erste volle Implementierung einer Container-Runtime mit \gls{acr-lxc} veröffentlicht. Im folgenden Abschnitt wird ein Blick auf Container-Runtimes in der Vergangenheit geworfen und die Frage geklärt, wie Docker so erfolgreich wurde. Dazu werden Probleme älterer Engines anhand eines Beispiels aufgezeigt und Lösungen, die jüngere Schritte mit sich bringen, erklärt.
-\todo{Welches Beispiel?}
+Wie in \fref{tab:timelineContainers} zu sehen, sind Container keine neue Erfindung. Bereits 2008 wurde die erste volle Implementierung einer Container-Runtime mit LXC ver"-öffentlicht. Im folgenden Abschnitt wird ein Blick auf Container-Runtimes in der Vergangenheit geworfen und die Frage geklärt, wie Docker so erfolgreich wurde. Dazu werden Probleme älterer Container-Engines und Lösungen, die jüngere Schritte mit sich bringen, erklärt.
 
-\todo{Basically Everything, das Chapter schreiben}
-
-\subsection{Vor LXC: Isolation mit Kernelpatches und Virtualisierung}
+\subsection{Vor LXC: Isolation mit Kernel-Patches}
 \label{sec:geschichteVorLXC}
+
+Bereits 1979 wurde mit \gls{acr-chroot} die erste, noch heute notwendige, Funktion veröffentlicht. Diese kam mit dem Betriebssystem Unix V7 und erlaubte es erstmals, verschiedene Prozesse in unterschiedliche Dateisystemen zu trennen. Der Systemaufruf wurde 1982 in BSD hinzugefügt \citep{ABriefHistoryofContainers:fromthe1970sto2017}. Zwei Dekaden später rücken isolierbare Prozesse durch FreeBSD Jails in den Mittelpunkt. Diese erweitern das \Gls{acr-chroot}-Konzept, indem nicht nur das Dateisystem vom Host-System getrennt wird, sondern auch Hostnamen, IP-Adressen und die Nutzerverwaltung \citep{FreeBSDHandbook}. 
+
+Neben FreeBSD Jails wurde bereits 2001 Linux VServer veröffentlicht, eine Software, die ähnlich wie Jails eine Isolation des Dateisystems und auch der Netzwerkadresse erlaubt. Entgegen der aktuell noch weiterentwickelten Jails war der letzte stabile Release von VServer 2008 \citep{PaperLinuxVServer}. Der größte Nachteil des VServers waren die bnötigten Kernel-Patches, die benötigt wurden, um die Isolierung zu gewährleisten.
+
+In den folgenden Jahren wurden immer mehr Lösungen zur Isolation von Prozessen veröffentlicht, darunter Oracles Solaris Containers, das auf Zonen im Betriebssystem setzt und Open VZ, welches wie VServer, einen gepatchten Linux-Kernel benötigt, aber auch Ressourcen isolieren kann. Der größte Nachteil, denn alle diese Technologien haben, ist die unzureichende und komplizierte Virtualisierung einzelner Prozesse. Zudem muss man Funktionen, die zur Isolation benötigt werden, nachpatchen. Dies führte 2006 dazu, dass Entwickler von Google eine bessere Lösung entwickelten, Process Containers. Diese erlaubten ohne Patches durch eine Controller-Architektur für einfache Verwendung und Isolation einzelner Ressourcen. Im Jahr 2007 wurden Process Container unter dem Namen \glspl{acr-cgroup} in den Linux-Kernel gemerged und liefern seitdem das Fundament für aktuelle Container-Technologien.
 
 \subsection{LXC: Erste Schritte in Container-Runtimes}
 \label{sec:geschichteLXC}
@@ -86,4 +89,4 @@ Wie in \fref{tab:timelineContainers} zu sehen, sind Container keine neue Erfindu
 \label{sec:geschichteDocker}
 
 \section{Aktuelle Probleme und Lösungen: Orchestrierung, Sicherheit und Standards}
-\label{sec:geschichteAktuell}
+\label{sec:geschichte}

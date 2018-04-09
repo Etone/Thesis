@@ -15,7 +15,7 @@ Dieses Kapitel behandelt alle benötigten Grundlagen, die zur Isolation eines Pr
 Durch die immer größere Verwendung von Containern und die Verbreitung verschiedener Container-Runtimes ist die Standardisierung eine wichtige Aufgabe. Folgend werden Standardisierungsprojekte aufgezählt, die bestehenden Spezifikationen erläutert und aktuelle Aufgaben der Projekte näher betrachtet.
 \subsection{App Container}
 \label{sec:appc}
-\Gls{acr-appc} ist ein Standard, der viele Aspekte innerhalb der Container-Landschaft behandelt. Dabei lag die Hauptaufgabe darin, eine Laufzeitumgebung wie auch das \gls{gls-image}-Format und die Verbreitung von \glspl{gls-image} zu spezifizieren. Seit 2016 wird das Projekt nicht mehr aktiv weiterentwickelt, da mit der Gründung der \gls{acr-oci} ein größeres Standardisierungsprojekt entstand. Bestandteile der \gls{acr-appc} wurden von der \gls{acr-oci} übernommen und dienen als Vorlage für die Spezifikation dieser.
+\Gls{acr-appc} ist ein Standard, der viele Aspekte innerhalb der Con"-tainer-Landschaft behandelt. Dabei lag die Hauptaufgabe darin, eine Laufzeitumgebung wie auch das \gls{gls-image}-Format und die Verbreitung von \glspl{gls-image} zu spezifizieren. Seit 2016 wird das Projekt nicht mehr aktiv weiterentwickelt, da mit der Gründung der \gls{acr-oci} ein größeres Standardisierungsprojekt entstand. Bestandteile der \gls{acr-appc} wurden von der \gls{acr-oci} übernommen und dienen als Vorlage für die Spezifikation dieser.
 
 \subsection{Open Container Initiative}
 \label{sec:oci}
@@ -29,7 +29,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{lcccc}
+		\begin{tabular}{lcclr}
 			\toprule
 			& \multicolumn{2}{c}{Standard} & \multicolumn{2}{c}{Container Runtime}\\
 			\cmidrule{2-5}
@@ -311,7 +311,7 @@ Durch den folgenden Aufruf hat, die in \texttt{rootfs} gestartete \texttt{/bin/b
 
 Um vollständige Isolation des Containers zu erreichen, müssen Systemressourcen, wie Arbeitsspeicher oder CPU-Zyklen limitiert werden. Dazu dienen die in \fref{sec:cgroups} beschriebenen \glspl{acr-cgroup}.
 
-Um eine \gls{acr-cgroup} zu erstellen, muss ein Ordner unterhalb des Wurzelverzeichnisses erstellt werden. Um einen Prozess einer \gls{acr-cgroup} zuzuordnen, wird die PID des Prozesses in die Datei \texttt{/sys/fs/cgroup/<controller>/<cgroupname>/tasks} geschrieben.
+Um eine \gls{acr-cgroup} zu erstellen, muss ein Ordner unterhalb des Wurzelverzeichnisses erstellt werden. Um einen Prozess einer \gls{acr-cgroup} zuzuordnen, wird die PID des Prozesses in die Datei \texttt{/sys/fs/cgroup/CONTROLLER/CGROUPNAME/tasks} geschrieben.
 
 \begin{listing}[h]
 	\begin{minted}[xleftmargin=-75pt, breaklines, breakafter=/]{bash}
