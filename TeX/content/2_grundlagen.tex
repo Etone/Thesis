@@ -15,7 +15,7 @@ Dieses Kapitel behandelt alle benötigten Grundlagen, die zur Isolation eines Pr
 Durch die immer größere Verwendung von Containern und die Verbreitung verschiedener Container-Runtimes ist die Standardisierung eine wichtige Aufgabe. Folgend werden Standardisierungsprojekte aufgezählt, die bestehenden Spezifikationen erläutert und aktuelle Aufgaben der Projekte näher betrachtet.
 \subsection{App Container}
 \label{sec:appc}
-\Gls{acr-appc} ist ein Standard, der viele Aspekte innerhalb der Container-Landschaft behandelt. Dabei lag die Hauptaufgabe darin, eine Laufzeitumgebung wie auch das \gls{gls-image}-Format und die Verbreitung von \glspl{gls-image} zu spezifizieren. Seit 2016 wird das Projekt nicht mehr aktiv weiterentwickelt, da mit der Gründung der \gls{acr-oci} ein größeres Standardisierungsprojekt entstand. Bestandteile der \gls{acr-appc} wurden von der \gls{acr-oci} übernommen und dienen als Vorlage für die Spezifikation dieser.
+\Gls{acr-appc} ist ein Standard, der viele Aspekte innerhalb der Con"-tainer-Landschaft behandelt. Dabei lag die Hauptaufgabe darin, eine Laufzeitumgebung wie auch das \gls{gls-image}-Format und die Verbreitung von \glspl{gls-image} zu spezifizieren. Seit 2016 wird das Projekt nicht mehr aktiv weiterentwickelt, da mit der Gründung der \gls{acr-oci} ein größeres Standardisierungsprojekt entstand. Bestandteile der \gls{acr-appc} wurden von der \gls{acr-oci} übernommen und dienen als Vorlage für die Spezifikation dieser.
 
 \subsection{Open Container Initiative}
 \label{sec:oci}
@@ -29,7 +29,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{lcccc}
+		\begin{tabu} to \textwidth{@{}lccX[4,l]X[5,r]@{}}
 			\toprule
 			& \multicolumn{2}{c}{Standard} & \multicolumn{2}{c}{Container Runtime}\\
 			\cmidrule{2-5}
@@ -41,7 +41,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 			\midrule
 			Runtime					& \faCheck	& \faCheck	& runC 				& appc runtime Spec		\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 	\end{center}
 	\caption{Standards OCI und AppC im Vergleich \citep{MakingSenseofContainerStandardsandFoundations:OCICNCFAppcandRkt}}
 	\label{tab:ociVSappc}
@@ -74,7 +74,7 @@ Container isolieren einzelne Prozesse durch verschiedene Kernel-Technologien, di
 
 \begin{table}[H]
 	\begin{center}
-		\begin{tabular}{ll}
+		\begin{tabu} to \textwidth{@{}lX[2,l]@{}}
 			\toprule
 			Controller 	& Ressource 												\\
 			\midrule
@@ -85,7 +85,7 @@ Container isolieren einzelne Prozesse durch verschiedene Kernel-Technologien, di
 			rdma		& Zugriffe über RDMA limitieren oder sperren				\\
 			cpu			& CPU-Zyklen und maximale CPU-Bandwidth						\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 		\caption{\Glspl{acr-cgroup}-Controller und deren Verwendung \citep{Cgroups7LinuxManualPage}}
 		\label{tab:cgroupController}
 	\end{center}
@@ -97,7 +97,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{ll}
+		\begin{tabu} to \textwidth{@{}ll@{}}
 			\toprule
 			Namespace			& Ressource				 				\\
 			\midrule
@@ -109,7 +109,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 			User				& Nutzer und Gruppen IDs				\\
 			UTS					& Hostnamen und Domänennamen			\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 	\end{center}
 	\caption{Linux Namespaces und verbundene Ressourcen \citep{Namespaces7LinuxManualPage}}
 	\label{tab:namespaces}
@@ -161,7 +161,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{lp{3cm}p{4cm}}
+		\begin{tabu}to \textwidth {@{}lX[2,l]X[3,l]@{}}
 			\toprule
 			Capability 		& Systemaufruf 			& Erklärung						\\
 			\midrule
@@ -174,7 +174,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 			CAP\_SYS\_TIME	& stime, settimeofday	& Setzen der Systemzeit 		\\
 			CAP\_SYS\_ADMIN	& mount, umount, setns, pipe, syslog, ... 	& Alles, was in keine andere Kategorie passt 														\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 	\end{center}
 	\caption{Einige Capabilities \citep{Capabilities7LinuxManualPage}}
 	\label{tab:capabilities}
@@ -311,7 +311,7 @@ Durch den folgenden Aufruf hat, die in \texttt{rootfs} gestartete \texttt{/bin/b
 
 Um vollständige Isolation des Containers zu erreichen, müssen Systemressourcen, wie Arbeitsspeicher oder CPU-Zyklen limitiert werden. Dazu dienen die in \fref{sec:cgroups} beschriebenen \glspl{acr-cgroup}.
 
-Um eine \gls{acr-cgroup} zu erstellen, muss ein Ordner unterhalb des Wurzelverzeichnisses erstellt werden. Um einen Prozess einer \gls{acr-cgroup} zuzuordnen, wird die PID des Prozesses in die Datei \texttt{/sys/fs/cgroup/<controller>/<cgroupname>/tasks} geschrieben.
+Um eine \gls{acr-cgroup} zu erstellen, muss ein Ordner unterhalb des Wurzelverzeichnisses erstellt werden. Um einen Prozess einer \gls{acr-cgroup} zuzuordnen, wird die PID des Prozesses in die Datei \texttt{/sys/fs/cgroup/CONTROLLER/CGROUPNAME/tasks} geschrieben.
 
 \begin{listing}[h]
 	\begin{minted}[xleftmargin=-75pt, breaklines, breakafter=/]{bash}
@@ -331,7 +331,7 @@ Um festzusetzen, wie viel Arbeitsspeicher der isolierte Prozess nutzen darf, kan
 	\caption{Limitieren des Arbeitsspeichers und Memory-Swap deaktivieren}
 \end{listing}
 
-Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal \tildeawesome100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses, der sich in der \gls{acr-cgroup} container befindet.
+Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal \tildeawesome100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm aus \fref{lst:hungry-py} ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses, der sich in der \gls{acr-cgroup} container befindet.
 
 \begin{listing}[h]
 	\begin{minted}[xleftmargin=-75pt]{python}
