@@ -29,7 +29,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{lcclr}
+		\begin{tabu} to \textwidth{@{}lccX[4,l]X[5,r]@{}}
 			\toprule
 			& \multicolumn{2}{c}{Standard} & \multicolumn{2}{c}{Container Runtime}\\
 			\cmidrule{2-5}
@@ -41,7 +41,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 			\midrule
 			Runtime					& \faCheck	& \faCheck	& runC 				& appc runtime Spec		\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 	\end{center}
 	\caption{Standards OCI und AppC im Vergleich \citep{MakingSenseofContainerStandardsandFoundations:OCICNCFAppcandRkt}}
 	\label{tab:ociVSappc}
@@ -74,7 +74,7 @@ Container isolieren einzelne Prozesse durch verschiedene Kernel-Technologien, di
 
 \begin{table}[H]
 	\begin{center}
-		\begin{tabular}{ll}
+		\begin{tabu} to \textwidth{@{}lX[2,l]@{}}
 			\toprule
 			Controller 	& Ressource 												\\
 			\midrule
@@ -85,7 +85,7 @@ Container isolieren einzelne Prozesse durch verschiedene Kernel-Technologien, di
 			rdma		& Zugriffe über RDMA limitieren oder sperren				\\
 			cpu			& CPU-Zyklen und maximale CPU-Bandwidth						\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 		\caption{\Glspl{acr-cgroup}-Controller und deren Verwendung \citep{Cgroups7LinuxManualPage}}
 		\label{tab:cgroupController}
 	\end{center}
@@ -97,7 +97,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{ll}
+		\begin{tabu} to \textwidth{@{}ll@{}}
 			\toprule
 			Namespace			& Ressource				 				\\
 			\midrule
@@ -109,7 +109,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 			User				& Nutzer und Gruppen IDs				\\
 			UTS					& Hostnamen und Domänennamen			\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 	\end{center}
 	\caption{Linux Namespaces und verbundene Ressourcen \citep{Namespaces7LinuxManualPage}}
 	\label{tab:namespaces}
@@ -161,7 +161,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{lp{3cm}p{4cm}}
+		\begin{tabu}to \textwidth {@{}lX[2,l]X[3,l]@{}}
 			\toprule
 			Capability 		& Systemaufruf 			& Erklärung						\\
 			\midrule
@@ -174,7 +174,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 			CAP\_SYS\_TIME	& stime, settimeofday	& Setzen der Systemzeit 		\\
 			CAP\_SYS\_ADMIN	& mount, umount, setns, pipe, syslog, ... 	& Alles, was in keine andere Kategorie passt 														\\
 			\bottomrule
-		\end{tabular}
+		\end{tabu}
 	\end{center}
 	\caption{Einige Capabilities \citep{Capabilities7LinuxManualPage}}
 	\label{tab:capabilities}
