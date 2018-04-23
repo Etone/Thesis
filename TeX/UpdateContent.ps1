@@ -1,8 +1,7 @@
 Write-Output "Updating content.tex"
-if (Test-Path "./content.old.tex") {
-    Remove-Item ".\content.old.tex"
+if (Test-Path "./content.tex") {
+    Remove-Item ".\content.tex"
 }
-Rename-Item ".\content.tex" -NewName "content.old.tex" -Force
 Get-ChildItem ".\content\" | ForEach-Object {
     $input = "\input{" + ($_.FullName | Resolve-Path -Relative).Replace('\','/') +"}"
     Write-Output "Writing $input to content.tex"

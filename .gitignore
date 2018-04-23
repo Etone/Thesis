@@ -41,3 +41,9 @@ MicroserviceExample/backend/todos-backend/mvnw\.cmd
 MicroserviceExample/backend/todos-backend/\.idea/
 
 TeX/thesis\.run\.xml
+
+MicroserviceExample/backend/\.mvn/wrapper/maven-wrapper\.jar
+
+MicroserviceExample/backend/mvnw
+
+MicroserviceExample/backend/mvnw\.cmd
