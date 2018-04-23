@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  datasource:
+    plattform: postgres
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://0.0.0.0:5321/todos
+    username: docker
+    password: docker

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ITodoRepository extends CrudRepository<Todo, Integer> {
     Todo findById(int id);
-    List<Todo>  findByIsActive(boolean isActive);
+    List<Todo>  findByIsActiveOrderByFinishUntilAsc(boolean isActive);
 }

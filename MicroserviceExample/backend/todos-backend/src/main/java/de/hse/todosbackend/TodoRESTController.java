@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController()
 @RequestMapping("todos")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin
 public class TodoRESTController {
 
     @Autowired
@@ -17,12 +17,12 @@ public class TodoRESTController {
 
     @GetMapping("active")
     public List<Todo> getActiveTodos(){
-        return todoRepository.findByIsActive(true);
+        return todoRepository.findByIsActiveOrderByFinishUntilAsc(true);
     }
 
     @GetMapping("done")
     public List<Todo> getDoneTodos(){
-        return  todoRepository.findByIsActive(false);
+        return  todoRepository.findByIsActiveOrderByFinishUntilAsc(false);
     }
 
     @PostMapping("add")
