@@ -6,7 +6,6 @@
 *.lol
 *.lot
 *.out
-*.xml
 *.gz
 *.toc
 *.blg
@@ -26,3 +25,19 @@ Vagrant/\.sudo_as_admin_successful
 \.vscode/
 
 TeX/_minted-thesis/
+
+MicroserviceExample/backend/todos-backend/\.mvn/wrapper/maven-wrapper\.jar
+
+*.properties
+
+MicroserviceExample/backend/todos-backend/mvnw
+
+MicroserviceExample/backend/todos-backend/mvnw\.cmd
+
+*.class
+
+*.iml
+
+MicroserviceExample/backend/todos-backend/\.idea/
+
+TeX/thesis\.run\.xml
