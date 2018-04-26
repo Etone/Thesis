@@ -33,3 +33,50 @@ To try out how different Runtimes work, this will be containered with
 
 This will show how the runtimes handle a pretty basic workload with
 Database -> Java Backend -> JS Frontend
+
+### Docker
+- Installation via apt-get unusual
+  - adding own repository, https and pgp key
+  - Good documentation helps a lot
+- Usage
+  - relatively simple, Writing small Dockerfiles
+  - portbinding and networksettings bit confusing (Host -> VM -> Docker Container)
+
+#### Steps
+1. Write Dockerfiles (already there in each Folder)
+2. ```docker build -t <TAG> (--build-arg JAR_FILE=./target/todos-backend-0.0.1-SNAPSHOT.jar) .```
+3. ```docker run -d (-e POSTGRES_IP=<IP container data> -e POSTGRES_PORT=5432> [-p 80:80] (-p 8080:8080) <TAG>```
+  - Note running Containers in Order: todos:data &rarr; todos:backend &rarr; todos:front
+
+() only needed for Backend
+[] only needed for Frontend
+
+It takes me around **6 Minutes** the first time running this, with no cached images  
+All 3 Images together are **109Mb(front) + 676Mb(back) + 289Mb(data) = 1,074Gb** in size.
+
+#### Docker Compose
+Using Docker Compose instead of three images makes the whole Process even easier.
+```yaml
+version: '3'
+services:
+  data:
+    image: library/postgres
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: todos
+  back:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      POSTGRES_PORT: 5432
+  front:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+
+```
