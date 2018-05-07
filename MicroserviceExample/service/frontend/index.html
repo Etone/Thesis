@@ -22,13 +22,17 @@
         .table > tbody > tr > td > span.showOnHover{
             visibility: hidden;
         }
+        #network-alert{
+          visibility: hidden;
+        }
     </style>
 
 </head>
 
 <body>
     <div id="app">
-        <h1 class="display-1 text-center py-5">Todos - A Microservice architecture Example</h1>
+      <div id="network-alert" class="alert alert-danger" data-alert="alert">Problem while connecting to Backend, please check that backend is running</div>
+      <h1 class="display-1 text-center py-5">Todos - A Microservice architecture Example</h1>
         <div id="todos-controls" class="container py-4 justify-content-center">
             <form>
                 <div class="form-row">
@@ -92,7 +96,8 @@
                     self.todos = response.data
                 })
                 .catch(error => {
-                    console.log(error.message)
+                    console.log(error.message);
+                    document.getElementById("network-alert").style.visibility = "visible";
                 })
         }
 
@@ -108,7 +113,7 @@
                 updateTodos(active, 'active');
             })
             .catch(error => {
-                //console.log(error.message);
+                document.getElementById("network-alert").style.visibility = "visible";
             })
         }
 
@@ -130,6 +135,7 @@
                     })
                     .catch(error => {
                         console.log(error);
+                        document.getElementById("network-alert").style.visibility = "visible";
                     })
                 }
             },

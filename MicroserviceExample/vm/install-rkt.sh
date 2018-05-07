@@ -80,10 +80,15 @@ EOF
 
 checkinstall -y --pkgname=rkt --pkgversion="${version}" ./install-pak
 
-# Install acbuild and systemd-nspawn
+# Install systemd-nspawn (via systemd-container)
 sudo apt-get install systemd-container
 
+# Install acbuild
 TMP_PATH=`mktemp -d`
 wget "https://github.com/containers/build/releases/download/v0.4.0/acbuild-v0.4.0.tar.gz" -O ${TMP_PATH}/acbuild.tar
 sudo tar -xzvf ${TMP_PATH}/acbuild.tar
 sudo mv ./acbuild-v0.4.0/acbuild{,-chroot,-script} /sbin/
+
+#install actool in appc-spec
+sudo apt-get update
+sudo apt-get -y install appc-spec

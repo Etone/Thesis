@@ -67,7 +67,9 @@ Vagrant.configure("2") do |config|
   # SHELL
 
   # Docker and Docker compose
-  config.vm.provision "shell", :path => "install-docker.sh"
+  config.vm.provision :shell, :path => "install-docker.sh"
   #rkt install
   config.vm.provision :shell, :privileged => true, :path => "install-rkt.sh"
+  #cri-o and lokal k8
+  # config.vm.provision :shell, :privileged => true, :path => "install-crio.sh"
 end

@@ -7,6 +7,6 @@ spring:
   datasource:
     plattform: postgres
     driverClassName: org.postgresql.Driver
-    url: jdbc:${POSTGRES_IP}://data:${POSTGRES_PORT}/todos
+    url: jdbc:postgresql://${POSTGRES_IP}:${POSTGRES_PORT}/todos
     username: docker
     password: docker

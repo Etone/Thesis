@@ -61,3 +61,7 @@ MicroserviceExample/service/backend/out/
 MicroserviceExample/service/backend/target/
 
 MicroserviceExample/vm/\.vagrant/
+
+MicroserviceExample/vm/tools/
+
+MicroserviceExample/service/frontend/\.acbuild/

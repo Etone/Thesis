@@ -13,7 +13,7 @@ services:
       - "8080:8080"
     environment:
       POSTGRES_PORT: 5432
-      POSTGERS_IP: postgres
+      POSTGRES_IP: data
   front:
     image: nginx:latest
     ports:

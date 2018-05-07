@@ -80,3 +80,20 @@ services:
       - ./frontend:/usr/share/nginx/html
 
 ```
+
+### rkt
+#### Data
+```bash
+sudo systemd-run rkt run \\
+--set-env=POSTGRES_DB=todos \\
+--set-env=POSTGRES_USER=docker \\
+--set-env=POSTGRES_PASSWORD=docker \\
+quay.io/coreos/postgres:latest
+```
+Data-Layer uses already existent aci from quay.io.
+
+#### Backend
+#### Frontend
+
+### runC
+As it is easier not to install a bunch of new Software, I use the runC runtime that comes with Docker, ```docker-runc```
