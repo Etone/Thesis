@@ -1,0 +1,209 @@
+%Start der Zusammenfassung
+\renewcommand{\footnoterule}{\hspace{-0.5cm}\rule{6cm}{1pt}{\vspace*{2pt}}}
+\selectlanguage{ngerman}
+\begin{center}
+\newcommand{\SchapoehlerCorvinThema}{Evaluation verschiedener Container-Technologien}
+		\baselineskip15pt
+		\textbf{\textcolor{hs_dunkelblau}{\large{Evaluation verschiedener Container-Technologien}}}\\\ \\
+		\baselineskip10pt
+\newcommand{\SchapoehlerCorvin}{Corvin \newline Schapöhler}
+		\textbf{\textcolor{hs_dunkelblau}{Corvin Schapöhler\label{SchapoehlerCorvin}\symbolfootnote[1]{\fontspec{Lucida Sans}
+\begin{minipage}[t]{67.43mm}Diese Arbeit wurde durchgeführt bei der Firma \\ NovaTec GmbH, Leinfelden-Echterdingen\end{minipage}\hspace{1.27cm}\vspace{0.1mm}
+\begin{minipage}[t]{71mm}
+\end{minipage}},}\hspace{.5cm}}
+\textbf{\textcolor{hs_dunkelblau}{
+Kai Warendorf,}}
+\hspace{.5cm}\textbf{\textcolor{hs_dunkelblau}{
+Dominik Schoop}}
+\textcolor{hs_dunkelblau}{\\\ \\Fakultät Informationstechnik der Hochschule Esslingen - University of Applied Sciences}\\\ \\
+\textcolor{hs_dunkelblau}{\textbf{Sommersemester 2018}}
+\color{hs_dunkelblau}\rule{\linewidth}{1.5pt}
+\end{center}
+\setcounter{figure}{0}
+\renewcommand{\bildI}{
+ \begin{center}
+ \begin{minipage}[t]{\linewidth}
+ \begin{center}
+  \includegraphics*[width=\linewidth]
+{../tmp/SchapoehlerCorvin/Corvin_Schapoehler_Bild01.jpg}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize Vergleich: Virutalisierung von VM und Isolation von Container}
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildII}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{../tmp/SchapoehlerCorvin/Corvin_Schapoehler_Bild02.png}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize Timline der wichtigsten Konzepte zur Isolation im Linux-Kernel}
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildIII}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildIV}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildV}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildVI}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildVII}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildVIII}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildIX}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\renewcommand{\bildX}{
+ \begin{center}
+  \begin{minipage}[t]{\linewidth}
+  \begin{center}
+  \includegraphics*[width=\linewidth]
+{Bild ist zu groß oder hat das falsche Format!}
+  \captionof{figure}{\fontspec{Lucida Sans} \footnotesize }
+  \end{center}
+  \end{minipage}
+ \end{center}
+}
+
+\begin{multicols}{2}
+Der Trend zur Cloud ist unumkehrbar. Bereits heute setzen Firmen wie Microsoft verstärkt auf das Cloudgeschäft [1]. Die treibende Technologie hinter diesem Trend sind Container. Im folgenden wird diese Technologie genauer betrachtet. Dabei soll die Frage beantwortet werden, wie Docker die populärste Technologie wurde, welche aktuellen Probleme bestehen und wie versucht wird, diese zu lösen.
+\\
+\\ \textbf{Container und Virtuelle Maschinen}
+\\
+\\
+Container dienen der Isolation von Prozessen. Dabei sind sie ressourcensparender und deutlich schneller als Virtuelle Machinen. Diese Einsparungen werden erreicht, indem nicht ein gesamtes Betriebssystem virtualisiert, sondern lediglich eine Isolation einzelner Systemkomponenten vorgenommen wird.
+\bildbreit
+\bildI
+\bildschmal
+Durch diese Methode sind Container hoch skalierbar und können binnen Bruchteile von Sekunden gestartet oder zerstört werden. Diese Skalierbarkeit und Isolation sind die tragenden Faktoren der heutigen Cloud-Architekturen.
+\\
+\\
+\\
+\textbf{Historische Entwicklung}
+\\
+\\
+Die grundlegenden Konzepte zur Isolation wurde bereits in den frühen 80er mit der Einführung des Unix Systemaufrufs chroot implementiert. Der erste große Durchbruch kam allerdings erst 2008 mit LXC [2]. Figure 2 Timeline der wichtigsten Container Releases
+\bildbreit
+\bildII
+\bildschmal
+Dieses implementiert eine vollständige Isolation des Linux-Kernels. In den folgenden Jahren wurden die unterliegenden Konzepte erweitert und vereinfacht. Die Popularität, die Container heute für sich haben kam mit dem Release der Container-Plattform Docker im Jahr 2013 [2].
+Docker setze zu Beginn auf LXC auf, wechselte bald aber zu einer eigenen Implementierung. Zudem bietet Docker mit dem Docker Hub eine SaaS-Plattform, die die Widerverwendung von Containern ermöglicht. 
+\\
+\\ \textbf{Alternativen zu Docker}
+\\
+\\
+Neben Docker hat sich ein großes Markt an Alternativen Container-Runtimes gebildet. So bietet CoreOS mit rkt eine Alternative, die auf Sicherheit und Widerverwendbarkeit einzelner Container setzt. Zudem setzt rkt darauf, eine der ersten Container-Runtimes zu sein, die den AppContainer Standard implementiert.
+Eine weitere Alternative bietet Canonical mit LXD, einer Weiterführung der Container-Runtime LXC. LXD setzt, recht ähnlich zu ersten Versionen von Docker auf eine RESTful API zur Steuerung von LXC. Im Gegensatz zu rkt oder Docker ist LXD dafür gedacht, komplette Linux-Distributionen zu isolieren.
+Durch das rapide Wachstum am Interesse für Container wurden Standards für diese gefordert. Neben AppContainer wurde 2015 unter der Obhut der Linux Foundation die Open Container Initiative gegründet [3]. Diese definiert Standards für Container-Images und Runtimes, die durch die Implementierung runc genutzt wird. Mittlerweile nutzen Docker und viele weitere Tools die Spezifikation und bauen ihre Angebote auf runc um.
+\\
+\\ \textbf{Aktuelle Probleme und Lösungen}
+\\
+\\
+Die enorme Populartität von Container und die ansteigende Nutzung werden auch viele Probleme mit dieser Art der Isolation erkenntlich. Bereits 2014 startete Google alle Dienste in Containern und musste somit jede Woche zwei Milliarden Container verwalten [4]. Zudem werden zunehmend Sicherheitslücken im Linux-Kernel bekannt, die es ermöglichen aus der Isolation auszubrechen. Um diesen Problemen entgegenzuwirken werden Orchestrierungstools wie Kubernetes und Container-Runtimes wie gVisor entwickelt, die mehr Sicherheit und vereinfachte Verwaltung versprechen.
+
+
+\end{multicols}
+\def\footnoterule{}
+\let\thefootnote\relax\footnote{
+{\fontspec{Lucida Sans}
+\vspace{0.1mm}
+\begin{minipage}[t]{\linewidth}
+ \newcounter{ZaehlerSchapoehlerCorvin}\begin{list}{\textcolor{black}{[\arabic{enumi}]}}{\usecounter{enumi}\setlength{\labelwidth}{2cm}\setlength{\leftmargin}{0.5cm}\setlength{\itemsep}{-1mm}}\item Sataya Nadella. \textit{Annual Report 2017}. Financial Report. Microsoft, 2017. url: https://www.microsoft.com/investor/reports/ar17/index.html (besucht am 09.05.2018).
+\item Rani Osnat. \textit{A Brief History of Containers: From the 1970s to 2017}. Blog. Mar. 21, 2018. url: https://blog.aquasec.com/a- brief- history- of- containersfrom-1970s-chroot-to-docker-2016 (besucht am 09.05.2018).
+\item Open Container Initiative. \textit{Open Container Initiative}. The Linux Foundation. 2018. url: https://www.opencontainers.org/ (besucht am 09.05.2018)
+\item Joe Beda. \textit{Containers At Scale. At Google, the Google Cloud Platform and Be
+yond}. In: GlueCon 2014. May 22, 2014. url: https://speakerdeck.com/jbeda/containers-at-scale (besucht am 09.05.2018).
+\end{list}
+Bildquellen:
+\begin{itemize}
+\item Abbildung 1: http://www.serverspace.co.uk/hubfs/Blog\_Images/ \\ container-vs-vm.jpg?t=1524959203460
+\item Abbildung 2: https://schd.ws/hosted\_files/kccnceu18/08/ \\ What\%E2\%80\%99s\%20Up\%20With\%20All\%20the\%20Container\%20Runtimes.pdf
+\end{itemize}
+\end{minipage}
+}}
+\newpage
+
+
+
+
+
+
+
+
+
+
