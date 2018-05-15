@@ -146,7 +146,7 @@ Der Trend zur Cloud ist unumkehrbar. Bereits heute setzen Firmen wie Microsoft, 
 \textbf{Container und virtuelle Maschinen} \\
 
 
-Container dienen der Isolation von Prozessen. Dabei sind sie ressourcensparender und deutlich schneller als Virtuelle Machinen. Diese Einsparungen werden erreicht, indem nicht ein gesamtes Betriebssystem virtualisiert, sondern lediglich eine Isolation einzelner Systemkomponenten vorgenommen wird.
+Container dienen der Isolation von Prozessen. Dabei sind sie ressourcensparender und deutlich schneller als Virtuelle Machinen. Wie in Abbildung 1 zu sehen geschieht dies, indem Container nur einzelne Systemressourcen isolieren statt ein gesamten Betriebssystem mit Kernel zu virtualisieren.
 \bildbreit
 \bildI
 \bildschmal
@@ -159,7 +159,7 @@ Die grundlegenden Konzepte zur Isolation wurde bereits in den späten 70er Jahre
 \bildbreit
 \bildII
 \bildschmal
-In den folgenden Jahren wurden die unterliegenden Konzepte erweitert und vereinfacht. Große Popularität gewann die Technologie allerdings erst 2013 mit dem Release der Container-Plattform Docker. Diese setze zu Beginn auf LXC auf, wechselte bald aber zu einer eigenen Implementierung. Zudem bietet Docker mit dem Docker Hub eine SaaS-Plattform, die die Widerverwendung von Containern ermöglicht.\\
+In den folgenden Jahren wurden die unterliegenden Konzepte erweitert und vereinfacht. Große Popularität gewann die Technologie allerdings erst 2013 mit dem Release der Container-Plattform Docker. Diese setze zu Beginn auf LXC auf, wechselte bald aber zu einer eigenen Implementierung. Zudem bietet Docker mit dem Docker Hub eine SaaS-Plattform, die die Widerverwendung von Containern ermöglicht. Nach dem Release von Docker wurden neue Konzepte wie rkt oder LXD veröffentlicht (siehe Abbildung 2)\\
 
  \textbf{Alternativen zu Docker} \\
 
@@ -192,6 +192,8 @@ Bildquellen:
 \end{minipage}
 }}
 \newpage
+
+
 
 
 
