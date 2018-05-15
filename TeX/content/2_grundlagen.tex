@@ -50,7 +50,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \subsection{Cloud Native Computing Foundation}
 \label{sec:cncf}
-Die \gls{acr-cncf} beschäftigt sich im Gegensatz zur \gls{acr-oci} nicht nur mit Containern, sondern der kompletten \gls{gls-cn}-Landschaft \citep{CNCFCloudNativeInteractiveLandscape}. Projekte wie \gls{acr-k8} und Prometheus werden durch die \gls{acr-cncf} weiterentwickelt und publiziert \cite{}. Da der Cloud-Native Entwicklungsprozess von Containern getragen wird, spielen Technologien wie containerd und rkt eine entscheidende Rolle für die \gls{acr-cncf}. Neben Container-Runtimes beinhaltet die \gls{acr-cncf} auch Projekte zur Orchestrierung von Containern, Logging und Monitoring dieser, wie auch Spezifikationen, zum Beispiel die TUF, eine Spezifikation die standardisiert, wie Softwarepakete upgedatet werden sollen \citep{CloudNativeComputingFoundation}.
+Die \gls{acr-cncf} beschäftigt sich im Gegensatz zur \gls{acr-oci} nicht nur mit Containern, sondern der kompletten \gls{gls-cn}-Landschaft \citep{CNCFCloudNativeInteractiveLandscape}. Projekte wie \gls{acr-k8} und Prometheus werden durch die \gls{acr-cncf} weiterentwickelt und publiziert. Da der Cloud-Native Entwicklungsprozess von Containern getragen wird, spielen Technologien wie containerd und rkt eine entscheidende Rolle für die \gls{acr-cncf} und sind ein großer Teil der \gls{gls-cn}-Landscape, wie in \fref{fig:cncfContainerLandscape} gezeigt. Neben Container-Runtimes beinhaltet die \gls{acr-cncf} auch Projekte zur Orchestrierung von Containern, Logging und Monitoring dieser, wie auch Spezifikationen, zum Beispiel die TUF, eine Spezifikation die standardisiert, wie Softwarepakete upgedatet werden sollen \citep{CloudNativeComputingFoundation}.
 
 \begin{figure}[H]
 	\begin{center}
@@ -119,7 +119,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 \label{sec:mount}
 Durch die Isolation eines Prozesses und der Bedingung, das Container unveränderlich sein sollen, stellt sich die Frage, wie man Containern dynamische Inhalte aus dem Host-System zur Verfügung stellt. Dies ist vor allem wichtig, wenn bei Veränderung der Umgebung nicht den Container neu gestartet werden soll. Sollte zum Beispiel eine neue Datei durch einen Webserver zur Verfügung gestellt werden, möchte man nicht den Container neu starten. Die Lösung dieses Problems ist der Unix-Systembefehl \texttt{mount}. 
 
-Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des Dateibaums angeheftet. Durch dieses vorgehen kann man Ordner vom Host-System  für das mit \gls{acr-chroot} isolierte Dateisystem des Containers zugänglich machen. Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Diese könnten durch den Aufruf von \texttt{chroot} nicht mehr aufgelöst werden.
+Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des Dateibaums angeheftet. Durch dieses vorgehen kann man Ordner vom Host-System  für das mit \gls{acr-chroot} isolierte Dateisystem des Containers zugänglich machen. Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Diese könnten durch den Aufruf von \texttt{chroot} nicht mehr aufgelöst werden, wie in \fref{fig:mountExample} zu sehen.
 
 \begin{figure}[h]
 	\centering
@@ -184,7 +184,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 \label{sec:windows}
 Viele Kernel-Features des Linux-Kernels erlauben eine Isolation und wurden teilweise spezifisch für diese entwickelt \citep{Namespaces7LinuxManualPage}. Seit 2016 können spezifisch Docker-Container auch unter Windows genutzt werden. Dabei trennt Microsoft Container in zwei verschiedene Isolationen auf.
 
-Windows Server Container 2016 sind ein nativer Windows Ansatz zur Isolation eines Prozesses. Dabei werden, wie bereits unter Linux Systemen, verschiedene Kernel-Technologien verwendet, um einen einzelnen Prozess zu isolieren. Der andere Ansatz sind Hyper-V Container. Diese sind eher \glspl{acr-vm} als Containers. Dabei ist der größte Unterschied, das Hyper-V Container eine minimale Installation eines Windows Betriebssystems nutzen, um auf diesem einzelne Isolationen zu erstellen, während Windows Server Container ein gemeinsames \gls{acr-os} Nutze, nämlich Windows Server
+Windows Server Container 2016 sind ein nativer Windows Ansatz zur Isolation eines Prozesses. Dabei werden, wie bereits unter Linux Systemen, verschiedene Kernel-Technologien verwendet, um einen einzelnen Prozess zu isolieren (siehe \fref{fig:hypervVSwinserver}). Der andere Ansatz sind Hyper-V Container. Diese sind eher \glspl{acr-vm} als Containers. Dabei ist der größte Unterschied, das Hyper-V Container eine minimale Installation eines Windows Betriebssystems nutzen, um auf diesem einzelne Isolationen zu erstellen, während Windows Server Container ein gemeinsames \gls{acr-os} nutzen, nämlich Windows Server.
 
 \begin{figure}[h]
 	\missingfigure{Hyper-V vs WinServer2016 container}
@@ -198,15 +198,7 @@ Um die in \fref{sec:funktionsweise} erläuterten Kernel-Features näher zu beleu
 
 \subsection{Erstellen eines tarballs}
 \label{sec:tarball}
-Bei einem tarball handelt es sich um ein komprimiertes Dateisystem. Dabei wird ein vollwertiges Linux-Dateisystem stark komprimiert, um es leichter zu versenden oder zusichern. Das Erzeugen eines tarballs ist durch das Tool buildroot einfach. Buildroot ist ein Unix-Tool, welches zur Erstellung von minimalistischen Linux-Distributionen für Embedded-Systems entworfen wurde. Es erlaubt aber auch, nur ein Dateisystem zu erzeugen, ohne Kernel oder Init-System. Dies ist entscheidend, da bei Containern der bestehende Kernel des Host-OS mitbenutzt wird (\textit{siehe \fref{fig:containerVsVm}}). Das Init-System, welches dazu dient, neue Prozesse zu starten, wird in einem Container ebenfalls nicht benötigt, da diese nur einen Prozess ausführen. Diese Features von buildroot erlauben es, ein \gls{gls-image} für Container zu erzeugen.
-
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{bilder/buildroot-menuconfig.png}
-		\caption{Buildroot Menü nach Start des Tools}
-		\label{fig:buildrootMenuConfig}
-	\end{center}
-\end{figure}
+Bei einem tarball handelt es sich um ein komprimiertes Dateisystem. Dabei wird ein vollwertiges Dateisystem stark komprimiert, um es leichter zu versenden oder zusichern. Das Erzeugen eines tarballs ist durch das Tool buildroot einfach. Buildroot ist ein Unix-Tool, welches zur Erstellung von minimalistischen Linux-Distributionen für Embedded-Systems entworfen wurde. Es erlaubt aber auch, nur ein Dateisystem zu erzeugen, ohne Kernel oder Init-System. Dies ist entscheidend, da bei Containern der bestehende Kernel des Host-OS mitbenutzt wird (\textit{siehe \fref{fig:containerVsVm}}). Das Init-System, welches dazu dient, neue Prozesse zu starten, wird in einem Container ebenfalls nicht benötigt, da diese nur einen Prozess ausführen. Diese Features von buildroot erlauben es, ein \gls{gls-image} für Container zu erzeugen.
 
 Zudem erlaubt es buildroot, einzelne Bibliotheken, wie zum Beispiel die Python-Runtime, beim Build-Prozess der Distribution zu integrieren. Nach dem Einstellen der benötigten Bibliotheken und dem deaktivieren der, für Container, unnötigen Features erzeugt Buildroot eine Config-Datei, die alle Änderungen beinhaltet. Durch das Starten des Build-Prozesses mit dem Befehl \texttt{make} wird die gewünschte Linux-Distribution erstellt. Am Ende dieses Prozesses liegt im Ordner \texttt{/buildroot/out/images/} das gewünschte Dateisystem \texttt{rootfs.tar}.
 
@@ -214,7 +206,7 @@ Zudem erlaubt es buildroot, einzelne Bibliotheken, wie zum Beispiel die Python-R
 \label{sec:isolieren}
 In \fref{sec:tarball} wurde ein Dateisystem mit der Python-Runtime erstellt. Dieses muss nun isoliert, ein Pythonprogramm in das Dateisystem gemounted und ausgeführt werden.
 
-Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt. 
+Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt. Durch den Aufruf aus \fref{lst:untarRootfs} ensteht die in \fref{fig:baumNachUntar} gezeigte Dateistruktur.
 
 \begin{listing}[h]
 	\begin{minted}[xleftmargin=-75pt]{bash}
@@ -256,7 +248,7 @@ Um einen Prozess mit dem Wurzelverzeichnis \texttt{/home/rootfs/} auszuführen, 
 	\label{lst:pythonChrooted}
 \end{listing}
 
-Durch diesen wird ein Webserver auf Adresse \texttt{http://0.0.0.0:8000} ausgeführt, der alle ihm zugänglichen Dateien zum Download bereitstellt. Beim Aufrufen dieser Adresse erkennt man, dass der Webserver nur Zugriff auf die in \texttt{/home/rootfs/} liegenden Dateien hat.
+Durch diesen wird ein Webserver auf Adresse \texttt{http://0.0.0.0:8000} ausgeführt, der alle ihm zugänglichen Dateien zum Download bereitstellt. Beim Aufrufen dieser Adresse erkennt man, dass der Webserver nur Zugriff auf die in \texttt{/home/rootfs/} liegenden Dateien hat, wie in \fref{fig:chrootPythonWebserver} gezeigt.
 
 \begin{figure}[H]
 	\begin{center}
@@ -278,7 +270,7 @@ Um weiterhin Zugriff auf dynamische Inhalte aus dem Host-System zu haben, kann m
 	\caption{Mounten von Verzeichnis \texttt{/readonly/} zu \texttt{/rootfs/var/src/}}
 \end{listing}
 
-Durch die Dateitrennung und den Aufruf von \texttt{chroot} tritt allerdings ein großes Problem auf. Der Python-Webserver wird mit erhöhten Rechten ausgeführt, da diese für den Aufruf von \texttt{chroot} benötigt werden.
+Durch die Dateitrennung und den Aufruf von \texttt{chroot} tritt allerdings ein großes Problem auf. Der Python-Webserver wird mit erhöhten Rechten ausgeführt, da diese für den Aufruf von \texttt{chroot} benötigt werden (siehe \fref{fig:chrootWhoami}).
 
 \begin{figure}[h]
 	\begin{center}

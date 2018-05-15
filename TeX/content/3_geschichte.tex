@@ -42,8 +42,8 @@ Ein weiterer Vorteil den \gls{acr-lxc} gegenüber älteren Technologien besitzt,
 2011 wurde die erste kommerziellen Container-Runtime mit \gls{acr-cf} Warden veröffentlicht. Diese basierte zu Beginn auf \gls{acr-lxc} und erweiterte diese mit eigenen Funktionen, wie einer REST API zur Steuerung und Verwaltung eines Container Clusters. Dabei setzt \gls{acr-cf} Warden auf eine Client-Server-Architektur. 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[scale=0.75]{bilder/cf-warden-arch.png}
-		\caption{Client-Server-Architektur von CF Warden}
+		\includegraphics{bilder/cf-warden-arch.pdf}
+		\caption{Client-Server-Architektur von CF Warden \citep{CFGardenbackEndsContainerSecurityDebugging}}
 		\label{fig:wardenArch}
 	\end{center}
 \end{figure}
@@ -58,10 +58,11 @@ Eine weitere wichtige Entwicklung von Google, neben \glspl{acr-cgroup} und \gls{
 
 \subsection{Docker: Ecosystem, Runtime und \gls{acr-saas} in einem}
 \label{sec:geschichteDocker}
-Im Jahr 2013 kam der größte Durchbruch für Container. Mit dem Release der Software Docker explodierten Container in Popularität und Nutzung.
+Im Jahr 2013 kam der größte Durchbruch für Container. Mit dem Release der Software Docker explodierten Container in Popularität und Nutzung (siehe \fref{fig:googleDocker}).
+
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[height=5cm, width=\textwidth]{bilder/google-search-docker.pdf}
+		\includegraphics[width=\textwidth]{bilder/google-search-docker.pdf}
 		\caption{Google Search Trend für Docker \citep{DockerErkundenGoogleTrends}}
 		\label{fig:googleDocker}
 	\end{center}
