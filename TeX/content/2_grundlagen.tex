@@ -208,7 +208,7 @@ In \fref{sec:tarball} wurde ein Dateisystem mit der Python-Runtime erstellt. Die
 
 Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt. Durch den Aufruf aus \fref{lst:untarRootfs} ensteht die in \fref{fig:baumNachUntar} gezeigte Dateistruktur.
 
-\begin{listing}[h]
+\begin{listing}
 	\begin{minted}[xleftmargin=-75pt]{bash}
 		cd /home
 		mkdir rootfs
@@ -240,7 +240,7 @@ Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt. Durch
 \end{figure}
 
 Um einen Prozess mit dem Wurzelverzeichnis \texttt{/home/rootfs/} auszuführen, ist lediglich der folgende Aufruf nötig.
-\begin{listing}[h]
+\begin{listing}
 	\begin{minted}[xleftmargin=-75pt, breaklines, breakafter=/]{bash}
 		sudo chroot rootfs /usr/bin/python3.6 -m http.server
 	\end{minted}
