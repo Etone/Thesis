@@ -1,7 +1,7 @@
 \chapter{Container-Runtimes}
 \label{chap:compCtnrRuntimes}
 
-Container-Runtimes sind das Herz eines jeden Container-Angebots. Sie laden benötigte Images herunter und instanziieren übergebene Prozesse in Containern. In diesem Kapitel werden verschiedene Runtimes miteinander verglichen und veranschaulicht, wie Runtimes neben Docker für spezielle Anforderungen geeignet sind.
+Container-Runtimes sind das Herz eines jeden Container-Angebots. Sie instanziieren übergebene Prozesse in isolierten Containern. In diesem Kapitel werden verschiedene Runtimes miteinander verglichen und veranschaulicht, wie Runtimes neben Docker für spezielle Anforderungen besser geeignet sind.
 
 \section{Vorgehen}
 \label{sec:vorgehen}
@@ -17,7 +17,17 @@ Um verschiedene Runtimes zu vergleichen wurde eine eigene Anwendung mit drei Mic
 
 \section{Docker Stack}
 \label{sec:compDocker}
-Docker ist der De-Facto-Standard unter den Container-Technologien. Dabei wird Docker im gesamten \gls{acr-dtap}-Zyklus verwendet.
+Docker ist der De-Facto-Standard unter den Container-Technologien und bietet eine vollständige Plattform zur Verwaltung und Orchestrierung von Container (Docker Swarm), der Verbreitung von \glspl{gls-image} (Docker Hub bzw. Docker Store) und der Verwaltung des Container-Lifecycles (Docker CLI) an.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/docker-stack-containerd-runc.pdf}
+		\caption{Docker Stack}
+		\label{fig:dockerStack}		
+	\end{center}
+\end{figure}
+
+Dabei kommen innerhalb des Docker Stacks die Runtimes \texttt{runc} und \texttt{containerd} zum Einsatz. Durch die in \fref{fig:dockerStack} gezeigte Abkapselung der Runtime kann Docker auf jede beliebige \gls{acr-oci}-konforme Runtime aufbauen. Der dadurch gewonnene Vorteil der Kompatibilität bietet allerdings auch Nachteile. Falls einer der vielen Komponenten im Container-Stack einen Bug aufweist, ist das Debugging der Anwendung deutlich komplexer und Fehler können langsamer gefunden werden. Zudem benötigt der Docker-Daemon privilegierte Berechtigungen um die in \fref{sec:funktionsweise} beschriebenen Konzepte zu Nutzen. Da der Daemon auch für den Download und Bau-Prozess der Images zuständig ist, werden alle Images in Docker im Kontext des Users \texttt{root} erstellt.
 
 Notes:
 \begin{itemize}
@@ -27,17 +37,12 @@ Notes:
 	\item Docker compose
 	\item kein extra Tooling
 	\item Netzwerk offen, einfach für Testen, unsicherer
-	\item Stack komplex, Debuggen schwieriger
-	\item nahezu überall genutzt, CRI-O / CRI-Contaienrd in Kubernets
-	\item Security Probleme "Running other Code as root"
-	\item run everything as root, root benötigt für vieles
 \end{itemize}
 
 \section{rkt}
 \label{sec:compRkt}
 Notes
 \begin{itemize}
-	\item Installation durch shell script (provided durch CoreOS) oder durch bauen der bin von github repos
 	\item unixesque CLI
 	\item kein Zentraler Deamon, dadurch integrierbar in init system
 	\item gedacht um einzelne Apps zu deployen, nicht ganze Linux Systeme
@@ -53,7 +58,6 @@ Notes
 \label{sec:compLXD}
 Notes:
 \begin{itemize}
-	\item Installiert auf Ubuntu by Nature
 	\item Gedacht für volle Linux Distros, nicht unbedingt Apps
 	\item in Verbindung mit Docker, statt direkte Konkurenz
 	\item LXD = LXC + RESTful API
@@ -61,6 +65,7 @@ Notes:
 	\item komplexer zu nutzen, da lower Level
 	\item Network zwischen Containern nur mit Linux mitteln, wissen von Nöten
 	\item Betroffen von Linux-Kernel issues, keine Abstarktion
+	\item RESTful API nutzbar über Netz, steuerung ohne SSH, Access zu VM, ...
 \end{itemize}
 
 \section{runC}
@@ -85,8 +90,6 @@ Notes:
 	\item Weniger Performance, Einzelne Aufrufe, starten und stoppen, ... "teurer" 
 	\item Erklären KataContaienrs, gVisor (neue Runtime)
 \end{itemize}
-
-\todo{gvisor, kata, HyperV Containers, ...}
 
 \section{Fazit}
 \label{sec:compFazit}
