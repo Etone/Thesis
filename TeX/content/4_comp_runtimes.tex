@@ -37,12 +37,12 @@ Um den beispielhaften Microservice aus \fref{fig:todosStack} zu Container wurde 
 Docker verwendet zur Beschreibung eines Images das Dockerfile. Dieses verwendet spezifische Keywords, um Docker beim Bau eines Images zu steuern (\fref{lst:dockerfileExmpl}).
 
 \begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt,breaklines]{dockerfile}
-		FROM openjdk:9-jre
-		VOLUME /tmp
-		ADD ./target/todos-backend-0.0.1-SNAPSHOT.jar app.jar
-		EXPOSE 8080
-		ENTRYPOINT ["java","-jar","/app.jar"]
+	\begin{minted}[breaklines]{dockerfile}
+FROM nginx:1.13-alpine
+VOLUME /tmp
+ADD ./index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+ENTRYPOINT ["nginx","-g","daemon off"]
 	\end{minted}
 	\caption{Beispiel für ein Dockerfile}
 	\label{lst:dockerfileExmpl}
@@ -85,32 +85,92 @@ Der größte Unterschied liegt dabei in der Art und Weise, wie Container innerha
 
 \subsection{Bewertung}
 \label{sec:compDockerBewertung}
-Docker erlaubt es einfach, den Service in Containern bereitzustellen. Dabei ist vor allem das große Vorhandensein bereits bestehender Images verantwortlich, aber auch die einfache Nutzung durch Docker Compose. Das Imageformat für Dockerfiles ist zwar einfach, aber grade für Unixsysteme ungewöhnlich und nur manchmal nur mit Dokumentation nutzbar. Die Vorteile beim einfachen Nutzen kommen allerdings zu einem Preis: Sicherheit. Images auf dem Dockerhub sind nicht verifizierbar und können Schadware und Sicherheitsprobleme mit sich bringen. Die einfache Nutzung des Netzwerks erlaubt ungewollten Zugriff auf containerisierte Services, da jedes Paket an den entsprechenden Container gesendet werden kann. Zudem baut Docker jedes Image unter dem Nutzer root, wodurch potentielle Sicherheitsrisiken wie falsch konfigurierte AppArmor Profile nicht beim Bau-Prozess auffallen.
+Docker erlaubt es einfach, den Service in Containern bereitzustellen. Dafür ist vor allem die große Auswahl bereits bestehender Images verantwortlich, aber auch die einfache Nutzung durch Docker Compose. Das Imageformat für Dockerfiles ist zwar einfach, aber grade für Unixsysteme ungewöhnlich und nur mit Dokumentation nutzbar. Die Vorteile der einfachen Nutzung kommen allerdings zu einem Preis: Sicherheit. Images auf dem Dockerhub sind nicht verifizierbar, können somit Schadware und Sicherheitsprobleme mit sich bringen. Zudem baut Docker jedes Image unter dem Nutzer root, wodurch potentielle Sicherheitsrisiken, wie falsch konfigurierte AppArmor Profile, nicht beim Bau-Prozess auffallen. Viele dieser Probleme kommen durch die in \fref{fig:dockerStack} gezeigte Architektur, bei der die Docker-\gls{acr-cli} nur ein Client ist, der den Docker Daemon steuert. Diese Herangehensweise erlaubt auch kaum Integration mit bereits vorhandenen Linux Tools wie \texttt{systemd} oder \texttt{upstart}.
 
-Notes:
-\begin{itemize}
-	\item gedacht für Apps
-	\item kein extra Tooling
-\end{itemize}
+\todo{Image share mit Docker Hub, private Repos für Firmen, Integration mit Orchestatoren}
 
 \section{rkt}
 \label{sec:compRkt}
-Notes
-\begin{itemize}
-	\item unixesque CLI
-	\item kein Zentraler Deamon, dadurch integrierbar in init system
-	\item gedacht um einzelne Apps zu deployen, nicht ganze Linux Systeme
-	\item kaum bis kein wissen über Kernel notwendig
-	\item AppC Standard, Docker images, OCI bundles
-	\item CNI Networking, CNCF Standard
-	\item Secure, crypto validierung default
-	\item Jedes Images SOLLTE signiert sein, sichere Quellen
-	\item kein root zur laufzeit benötigt
-\end{itemize}
+
+CoreOS veröffentlicht mit rkt den aktuell größten Konkurrenten zu Docker. Dieser setzt, wie in \fref{fig:rktProcessModell} zu sehen, auf ein deutlich vereinfachtes Prozessmodell. Diese ist deutlich linuxartiger, wodurch rkt im Vergleich zu Docker sicherer ist. Zudem ist rkt auf die Integration mit \texttt{systemd} konzipiert, wodurch sich der Container von diesem Überwachen und steuern lässt.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.9]{bilder/rkt-process.pdf}
+		\caption{rkt Prozess Modell \citep{RktVsOtherProjects}}
+		\label{fig:rktProcessModell}		
+	\end{center}
+\end{figure}
+
+
+\subsection{Vorgehensweise}
+\label{sec:compRktVorgehen}
+
+Im Gegensatz zu Docker bietet rkt die Möglichkeit verschiedene Imageformate zu nutzen um Container zu erstellen. Neben dem Dockerformat können auch OCI-konforme Bundles und \glspl{acr-aci} ausgeführt werden. Um den beispielhaften Microservice aus \fref{fig:todosStack} bereitzustellen, wurde für jeden Service ein \gls{acr-aci} erstellt. Zu diesem Zweck wird das Tool \texttt{acbuild} benötigt, welches ähnlich dem Syntax eines Dockerfiles einzelne Befehle hat um das zu erstellende \gls{acr-aci} zu spezifizieren (siehe \fref{lst:acbuildCommands}). Ein Container mit dem daraus resultierenden \gls{acr-aci} kann mit dem Befehl \mintinline[breaklines]{bash}{systemd-run rkt run --insecure-options=image nginx-latest-linux-amd64.aci} gestartet werden.
+
+\begin{listing}[h]
+	\begin{minted}[breaklines]{bash}
+acbuild --debug begin
+
+acbuildEnd() {
+	export EXIT=$?
+	acbuild --debug end && exit $EXIT 
+}
+trap acbuildEnd EXIT
+
+acbuild --debug set-name example.com/nginx
+acbuild --debug dep add quay.io/coreos/alpine-sh
+acbuild --debug run apk update
+acbuild --debug run apk add nginx
+acbuild --debug port add http tcp 80
+acbuild --debug mount add html /usr/share/nginx/html
+acbuild --debug set-exec -- /usr/sbin/nginx -g "daemon off;"
+acbuild --debug write --overwrite nginx-latest-linux-amd64.aci
+	\end{minted}
+	\caption{Bash Script um \gls{acr-aci} mit \texttt{acbuild} zu erstellen \citep{AppContainer}}
+	\label{lst:acbuildCommands}
+\end{listing}
+
+Dabei fallen folgende Unterschiede zur Herangehensweise mit Docker auf:
+\begin{enumerate}
+	\item \texttt{systemd-run} \\ 
+	Dieses Prefix wird benötigt um einen rkt Container im Hintergrund auszuführen, vergleichbar mit \texttt{docker run -d <image>}. Da rkt kein Daemon nutzt (siehe \fref{fig:rktProcessModell}), kann es mit bekannten und verbreiteten Linux Tools genutzt werden kann. Um den Container-Prozess zu überwachen und zu steuern wird das Initsystem \texttt{systemd} verwendet.
+	\item \texttt{--insecure-options=image} \\
+	rkt verlangt bei jedem Image, dass es von einer vertrauenswürdigen Quelle gebaut wurde. Dazu nimmt rkt an, dass jeder Image digital signiert ist. Da dies bei dem angelegten \gls{acr-aci} nicht der Fall ist, kann dieses Verhalten mit der gegebenen Option ausgeschaltet werden.
+\end{enumerate}
+
+Um Container miteinander zu verknüpfen nutzt rkt das von der \gls{acr-cncf} publizierte \gls{acr-cni}. Dieses erlaubt es, mittels einer JSON-Konfiguration, neue Routen für den Traffic zum Container zu spezifizieren (siehe \fref{lst:cniConfig}). Dadurch kann man, ähnlich wie bei Docker Compose, einzelnen Containern DNS Namen zuweisen und somit ohne das wissen der IP Container verknüpfen.
+
+\begin{listing}[h]
+	\begin{minted}[breaklines]{json}
+{
+	"cniVersion": "0.2.0",
+	"name": "mynet",
+	"type": "bridge",
+	"bridge": "cni0",
+	"isGateway": true,
+	"ipMasq": true,
+	"ipam": {
+		"type": "host-local",
+		"subnet": "10.22.0.0/16",
+		"routes": [
+			{ "dst": "0.0.0.0/0" }
+		]
+	}
+}
+	\end{minted}
+	\caption{Beispielhafte \gls{acr-cni}-Konfiguration}
+	\label{lst:cniConfig}
+\end{listing}
+
+\subsection{Bewertung}
+\label{sec:compRktBewertung}
+In vielen Punkten gleichen sich rkt und Docker. Bei beiden steht das bereitstellen einer Anwendung im Mittelpunkt. Doch gerade was das Thema Sicherheit und die Linuxähnlichkeit angeht treffen unterschiedliche Ansätze aufeinander. CoreOS bewegt sich näher an dem für Linuxsysteme typischen Aufbau und bietet mit rkt Integrationen zu weitverbreiteten Tools wie \texttt{systemd} an. Zudem benötigt rkt keine privilegierten Berechtigungen und arbeitet vollständig im Nutzerkontext. Durch dieses Vorgehen ist eine Privilege-Escalation weniger wahrscheinlich. Zudem lässt sich der rkt Prozess granularer Steuern, da er keinen Daemon nutzt. Diese Vorteile kommen allerdings zum Preis von mehr Konfigurationsaufwand. Wenn man \fref{lst:dockerfileExmpl} und \fref{lst:acbuildCommands} vergleicht wird man feststellen, dass das erstellen von Images mit \texttt{acbuild} komplexer und aufwändiger ist. Zudem wird neben rkt das Tool \texttt{acbuild} benötigt, da rkt selber keine Images erstellen kann, sondern lediglich eine Runtime bietet. Weiterreichend ist die Konfiguration des Netzwerks mittels \gls{acr-cni} umfangreicher und komplexer. 
+\todo{Image share via https Webserver, keine notwendigkeit für Config von priv Repos, Integration mit Kubernetes, ...}
 
 \section{LXD / LXC}
 \label{sec:compLXD}
-Notes:
+
 \begin{itemize}
 	\item Gedacht für volle Linux Distros, nicht unbedingt Apps
 	\item in Verbindung mit Docker, statt direkte Konkurenz
@@ -122,10 +182,9 @@ Notes:
 	\item RESTful API nutzbar über Netz, steuerung ohne SSH, Access zu VM, ...
 \end{itemize}
 
-\section{runC}
+\section{runc}
 \label{sec:compRunc}
 
-Notes:
 \begin{itemize}
 	\item OCI stdimpl
 	\item Low Level
