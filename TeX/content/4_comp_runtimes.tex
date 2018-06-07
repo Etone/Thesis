@@ -165,17 +165,58 @@ Um Container miteinander zu verknüpfen nutzt rkt das von der \gls{acr-cncf} pub
 
 \subsection{Bewertung}
 \label{sec:compRktBewertung}
-In vielen Punkten gleichen sich rkt und Docker. Bei beiden steht das bereitstellen einer Anwendung im Mittelpunkt. Doch gerade was das Thema Sicherheit und die Linuxähnlichkeit angeht treffen unterschiedliche Ansätze aufeinander. CoreOS bewegt sich näher an dem für Linuxsysteme typischen Aufbau und bietet mit rkt Integrationen zu weitverbreiteten Tools wie \texttt{systemd} an. Zudem benötigt rkt keine privilegierten Berechtigungen und arbeitet vollständig im Nutzerkontext. Durch dieses Vorgehen ist eine Privilege-Escalation weniger wahrscheinlich. Zudem lässt sich der rkt Prozess granularer Steuern, da er keinen Daemon nutzt. Diese Vorteile kommen allerdings zum Preis von mehr Konfigurationsaufwand. Wenn man \fref{lst:dockerfileExmpl} und \fref{lst:acbuildCommands} vergleicht wird man feststellen, dass das erstellen von Images mit \texttt{acbuild} komplexer und aufwändiger ist. Zudem wird neben rkt das Tool \texttt{acbuild} benötigt, da rkt selber keine Images erstellen kann, sondern lediglich eine Runtime bietet. Weiterreichend ist die Konfiguration des Netzwerks mittels \gls{acr-cni} umfangreicher und komplexer. 
+In vielen Punkten gleichen sich rkt und Docker. Bei beiden steht das bereitstellen einer Anwendung im Mittelpunkt. Doch gerade was das Thema Sicherheit und die Linuxähnlichkeit angeht treffen unterschiedliche Ansätze aufeinander. CoreOS bewegt sich näher an dem für Linuxsysteme typischen Aufbau und bietet mit rkt Integrationen zu weitverbreiteten Tools wie \texttt{systemd} an. Zudem benötigt rkt keine privilegierten Berechtigungen und arbeitet vollständig im Nutzerkontext. Durch dieses Vorgehen ist eine Privilege-Escalation weniger wahrscheinlich. Zudem lässt sich der rkt Prozess granularer Steuern, da er keinen Daemon nutzt. Diese Vorteile kommen allerdings zum Preis von mehr Konfigurationsaufwand. Wenn man \fref{lst:dockerfileExmpl} und \fref{lst:acbuildCommands} vergleicht wird man feststellen, dass das erstellen von Images mit \texttt{acbuild} komplexer und aufwändiger ist. Zudem wird neben rkt das Tool \texttt{acbuild} benötigt, da rkt selber keine Images erstellen kann, sondern lediglich eine Runtime bietet. Weiterreichend ist die Konfiguration des Netzwerks mittels \gls{acr-cni} umfangreicher und komplexer.
 \todo{Image share via https Webserver, keine notwendigkeit für Config von priv Repos, Integration mit Kubernetes, ...}
 
 \section{LXD / LXC}
 \label{sec:compLXD}
 
+2008 kam mit LXC die erste vollwertige Implementierung einer Container-Runtime auf den Markt. Diese erlaubte es, ohne Veränderung des Kernels, Prozesse zu isolieren. 2015 wurde mit LXD eine Erweiterung von LXC veröffentlicht, die zu LXC eine RESTful API anbietet. Im Gegensatz zu Docker und rkt ist LXD dazu gedacht, komplette Betriebssysteme in Containern bereitzustellen und nicht einzelne Applikationen. Dadurch sieht sich LXD nicht als direkte Konkurrenz zu Docker, sondern als komplementäre Technologie um mehr Sicherheit und Virtualisierung zu bieten \citep{TheLXDContainerHypervisor} (siehe \fref{fig:cloudStack}).
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[]{bilder/cloud-stack.pdf}
+		\caption{Docker Container in LXD Container}
+		\label{fig:cloudStack}		
+	\end{center}
+\end{figure}
+
+\subsection{Vorgehensweise}
+\label{sec:compLXDVorgehen}
+
+Auch wenn LXD nicht hauptsächlich dafür gedacht ist, Applikationen und Services bereitzustellen, ist es möglich, diese mit LXD zu isolieren. Im Gegensatz zu Docker oder rkt können mit LXD mehrere Prozesse in einem Container isoliert werden. Um den aus \fref{fig:todosStack} bekannten Service mit LXD bereitzustellen, muss ein Baseimage ausgewählt, die benötigten Bibliotheken, Tools und Laufzeitumgebungen installiert und die erstellten Executables in das Dateisystem des Containers kopiert werden. Dazu kann man die mit LXD mitgelieferte CLI lxc nutzen (siehe \fref{lst:lxdConfig}).
+
+\begin{listing}[h]
+	\begin{minted}[breaklines]{bash}
+lxc launch ubuntu:16.04 todos
+
+# Add web frontend
+lxc file push /service/frontend/index.html /usr/share/nginx/html
+
+# Add backend jar
+lxc file push /service/backend/target/todos-backend-0.0.1-SNAPSHOT.jar /home/app.jar
+
+
+lxc exec todos -- /bin/bash
+# install ngninx, openjre-9 and postgres
+# configure postgres database
+# configure nginx and firewall
+
+# execute postgres, app.jar and nginx
+
+exit
+	\end{minted}
+	\caption{Shellscript um LXD Container zu starten}
+	\label{lst:lxdConfig}
+\end{listing}
+
+Durch dieses Vorgehen ist die Anwendung vollständig isoliert vom Hostsystem, allerdings von außen nicht aufrufbar, da LXD keine Änderungen am Netzwerk des Hostsystems vornimmt. Um einen Container von außen zugänglich zu machen muss zusätzlich eine Bridge auf dem Hostsystem konfiguriert und mit dem Container verknüpft werden.
+\todo{bash linux bridge, mehrere Container für jeden Service einen}
+
+\subsection{Bewertung}
+\label{sec:compLXDBewertung}
+
 \begin{itemize}
-	\item Gedacht für volle Linux Distros, nicht unbedingt Apps
-	\item in Verbindung mit Docker, statt direkte Konkurenz
-	\item LXD = LXC + RESTful API
-	\item Docker bis anfang 2014 based of LXC
 	\item komplexer zu nutzen, da lower Level
 	\item Network zwischen Containern nur mit Linux mitteln, wissen von Nöten
 	\item Betroffen von Linux-Kernel issues, keine Abstarktion
@@ -184,6 +225,12 @@ In vielen Punkten gleichen sich rkt und Docker. Bei beiden steht das bereitstell
 
 \section{runc}
 \label{sec:compRunc}
+
+\subsection{Vorgehensweise}
+\label{sec:compRuncVorgehen}
+
+\subsection{Bewertung}
+\label{sec:compRuncBewertung}
 
 \begin{itemize}
 	\item OCI stdimpl
