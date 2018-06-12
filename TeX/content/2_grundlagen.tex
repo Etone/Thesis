@@ -189,13 +189,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 \label{sec:windows}
 Viele Kernel-Features des Linux-Kernels erlauben eine Isolation und wurden teilweise spezifisch für diese entwickelt \citep{Namespaces7LinuxManualPage}. Seit 2016 können spezifisch Docker-Container auch unter Windows genutzt werden. Dabei trennt Microsoft Container in zwei verschiedene Isolationen auf.
 
-Windows Server Container 2016 sind ein nativer Windows Ansatz zur Isolation eines Prozesses. Dabei werden, wie bereits unter Linux Systemen, verschiedene Kernel-Technologien verwendet, um einen einzelnen Prozess zu isolieren (siehe \fref{fig:hypervVSwinserver}). Der andere Ansatz sind Hyper-V Container. Diese sind eher \glspl{acr-vm} als Containers. Dabei ist der größte Unterschied, das Hyper-V Container eine minimale Installation eines Windows Betriebssystems nutzen, um auf diesem einzelne Isolationen zu erstellen, während Windows Server Container ein gemeinsames \gls{acr-os} nutzen, nämlich Windows Server.
-
-\begin{figure}[h]
-	\missingfigure{Hyper-V vs WinServer2016 container}
-	\caption{Unterschiede der Isolation bei Containern unter Windows}
-	\label{fig:hypervVSwinserver}
-\end{figure}
+Windows Server Container 2016 sind ein nativer Windows Ansatz zur Isolation eines Prozesses. Dabei werden, wie bereits unter Linux Systemen, verschiedene Kernel-Technologien verwendet, um einen einzelnen Prozess zu isolieren (siehe \fref{fig:hypervVSwinserver}). Der andere Ansatz sind Hyper-V Container. Diese sind eher \glspl{acr-vm} als Containers. Dabei ist der größte Unterschied, das Hyper-V Container eine minimale Installation eines Windows Kernels nutzen, um auf diesem einzelne Isolationen zu erstellen, während Windows Server Container einn gemeinsamen Kernel nutzen.
 
 \section{Eigene Implementierung}
 \label{sec:eigeneImpl}
@@ -330,7 +324,7 @@ echo "100000000" > /sys/fs/cgroup/memory/container/memory.limit_in_bytes
 
 Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal \tildeawesome100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm aus \fref{lst:hungry-py} ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses, der sich in der \gls{acr-cgroup} container befindet.
 
-\begin{listing}[h]
+\begin{listing}[hp]
 	\begin{minted}[]{python}
 #hungry.py - Eating up memory in 10Mb blocks
 import time
@@ -352,9 +346,9 @@ while True:
 \end{listing}
 
 
-\begin{figure}[h]
+\begin{figure}[hp]
 	 \begin{center}
-	 	\includegraphics[scale=1]{bilder/cgroup-container-killed.png}
+	 	\includegraphics[scale=1.3]{bilder/cgroup-container-killed.png}
 	 	\caption{Ausgabe des Pythonprogramms \texttt{hungry.py}}
 	 	\label{fig:cgroupKilled}
 	 \end{center}

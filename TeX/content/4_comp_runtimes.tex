@@ -87,7 +87,7 @@ Der größte Unterschied liegt dabei in der Art und Weise, wie Container innerha
 \label{sec:compDockerBewertung}
 Docker erlaubt es einfach, den Service in Containern bereitzustellen. Dafür ist vor allem die große Auswahl bereits bestehender Images verantwortlich, aber auch die einfache Nutzung durch Docker Compose. Das Imageformat für Dockerfiles ist zwar einfach, aber grade für Unixsysteme ungewöhnlich und nur mit Dokumentation nutzbar. Die Vorteile der einfachen Nutzung kommen allerdings zu einem Preis: Sicherheit. Images auf dem Dockerhub sind nicht verifizierbar, können somit Schadware und Sicherheitsprobleme mit sich bringen. Zudem baut Docker jedes Image unter dem Nutzer root, wodurch potentielle Sicherheitsrisiken, wie falsch konfigurierte AppArmor Profile, nicht beim Bau-Prozess auffallen. Viele dieser Probleme kommen durch die in \fref{fig:dockerStack} gezeigte Architektur, bei der die Docker-\gls{acr-cli} nur ein Client ist, der den Docker Daemon steuert. Diese Herangehensweise erlaubt auch kaum Integration mit bereits vorhandenen Linux Tools wie \texttt{systemd} oder \texttt{upstart}.
 
-\todo{Image share mit Docker Hub, private Repos für Firmen, Integration mit Orchestatoren}
+Ein Nachteil gegenüber anderen Runtimes ist die Pflicht eines Imagerepositories. Um Docker Images zu teilen und verbreiten wird ein solches Zwanghaft benötigt und muss somit gehostet, gewartet und Konfiguriert werden. Um diese Aufgaben zu erleichtern bieten Google, Amazon, CoreOS und weitere gehostete Container Image-Registries an.
 
 \section{rkt}
 \label{sec:compRkt}
@@ -106,7 +106,7 @@ CoreOS veröffentlicht mit rkt den aktuell größten Konkurrenten zu Docker. Die
 \subsection{Vorgehensweise}
 \label{sec:compRktVorgehen}
 
-Im Gegensatz zu Docker bietet rkt die Möglichkeit verschiedene Imageformate zu nutzen um Container zu erstellen. Neben dem Dockerformat können auch OCI-konforme Bundles und \glspl{acr-aci} ausgeführt werden. Um den beispielhaften Microservice aus \fref{fig:todosStack} bereitzustellen, wurde für jeden Service ein \gls{acr-aci} erstellt. Zu diesem Zweck wird das Tool \texttt{acbuild} benötigt, welches ähnlich dem Syntax eines Dockerfiles einzelne Befehle hat um das zu erstellende \gls{acr-aci} zu spezifizieren (siehe \fref{lst:acbuildCommands}). Ein Container mit dem daraus resultierenden \gls{acr-aci} kann mit dem Befehl \mintinline[breaklines]{bash}{systemd-run rkt run --insecure-options=image nginx-latest-linux-amd64.aci} gestartet werden.
+Im Gegensatz zu Docker bietet rkt die Möglichkeit verschiedene Imageformate zu nutzen um Container zu erstellen. Neben dem Dockerformat können auch OCI-konforme Bundles und \glspl{acr-aci} ausgeführt werden. Um den beispielhaften Microservice aus \fref{fig:todosStack} bereitzustellen, wurde für jeden Service ein \gls{acr-aci} erstellt. Zu diesem Zweck wird das Tool \texttt{acbuild} benötigt, welches ähnlich dem Syntax eines Dockerfiles einzelne Befehle hat um das zu erstellende \gls{acr-aci} zu spezifizieren (siehe \fref{lst:acbuildCommands}).
 
 \begin{listing}[h]
 	\begin{minted}[breaklines]{bash}
@@ -131,7 +131,7 @@ acbuild --debug write --overwrite nginx-latest-linux-amd64.aci
 	\label{lst:acbuildCommands}
 \end{listing}
 
-Dabei fallen folgende Unterschiede zur Herangehensweise mit Docker auf:
+Ein Container mit dem daraus resultierenden \gls{acr-aci} kann mit dem Befehl \mintinline[breaklines]{bash}{systemd-run rkt run --insecure-options=image nginx-latest-linux-amd64.aci} gestartet werden. Dabei fallen folgende Unterschiede zur Herangehensweise mit Docker auf:
 \begin{enumerate}
 	\item \texttt{systemd-run} \\ 
 	Dieses Prefix wird benötigt um einen rkt Container im Hintergrund auszuführen, vergleichbar mit \texttt{docker run -d <image>}. Da rkt kein Daemon nutzt (siehe \fref{fig:rktProcessModell}), kann es mit bekannten und verbreiteten Linux Tools genutzt werden kann. Um den Container-Prozess zu überwachen und zu steuern wird das Initsystem \texttt{systemd} verwendet.
@@ -165,8 +165,26 @@ Um Container miteinander zu verknüpfen nutzt rkt das von der \gls{acr-cncf} pub
 
 \subsection{Bewertung}
 \label{sec:compRktBewertung}
-In vielen Punkten gleichen sich rkt und Docker. Bei beiden steht das bereitstellen einer Anwendung im Mittelpunkt. Doch gerade was das Thema Sicherheit und die Linuxähnlichkeit angeht treffen unterschiedliche Ansätze aufeinander. CoreOS bewegt sich näher an dem für Linuxsysteme typischen Aufbau und bietet mit rkt Integrationen zu weitverbreiteten Tools wie \texttt{systemd} an. Zudem benötigt rkt keine privilegierten Berechtigungen und arbeitet vollständig im Nutzerkontext. Durch dieses Vorgehen ist eine Privilege-Escalation weniger wahrscheinlich. Zudem lässt sich der rkt Prozess granularer Steuern, da er keinen Daemon nutzt. Diese Vorteile kommen allerdings zum Preis von mehr Konfigurationsaufwand. Wenn man \fref{lst:dockerfileExmpl} und \fref{lst:acbuildCommands} vergleicht wird man feststellen, dass das erstellen von Images mit \texttt{acbuild} komplexer und aufwändiger ist. Zudem wird neben rkt das Tool \texttt{acbuild} benötigt, da rkt selber keine Images erstellen kann, sondern lediglich eine Runtime bietet. Weiterreichend ist die Konfiguration des Netzwerks mittels \gls{acr-cni} umfangreicher und komplexer.
-\todo{Image share via https Webserver, keine notwendigkeit für Config von priv Repos, Integration mit Kubernetes, ...}
+In vielen Punkten gleichen sich rkt und Docker. Bei beiden steht das Bereitstellen einer Anwendung im Mittelpunkt. Doch gerade was das Thema Sicherheit und die Linuxähnlichkeit angeht treffen unterschiedliche Ansätze aufeinander. CoreOS bewegt sich näher an dem für Linuxsysteme typischen Aufbau und bietet mit rkt Integrationen zu weitverbreiteten Tools wie \texttt{systemd} an. Zudem benötigt rkt keine privilegierten Berechtigungen und arbeitet vollständig im Nutzerkontext. Durch dieses Vorgehen ist eine Privilege-Escalation weniger wahrscheinlich. Zudem lässt sich der rkt Prozess granularer Steuern, da er keinen Daemon nutzt. Diese Vorteile kommen allerdings zum Preis von mehr Konfigurationsaufwand. Wenn man \fref{lst:dockerfileExmpl} und \fref{lst:acbuildCommands} vergleicht wird man feststellen, dass das erstellen von Images mit \texttt{acbuild} komplexer und aufwändiger ist. Zudem wird neben rkt das Tool \texttt{acbuild} benötigt, da rkt selber keine Images erstellen kann, sondern lediglich eine Runtime bietet. Weiterreichend ist die Konfiguration des Netzwerks mittels \gls{acr-cni} umfangreicher und komplexer.
+
+Ein großer Vorteil gegenüber Docker ist die Art und Weise, wie man Images teilen und verbreiten kann. Für \glspl{acr-aci} ist kein private gehostetes Imagerepository notwendig, wie bei Docker. Es reicht lediglich ein Webserver und einige Metatags in der index.html (siehe \fref{lst:rktReposHTML}). Dadruch entfällt der Konfigurationsaufwand, der mit dem Hosten eines Repositories anfällt.
+
+\begin{listing}
+	\begin{minted}[breaklines, breakafter=/]{html}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="ac-discovery" content="example.com/hello https://example.com/images/{name}-{version}-{os}-{arch}.{ext}">
+		<meta name="ac-discovery-pubkeys" content="example.com/hello https://example.com/pubkeys.gpg">
+	</head>
+</html>
+	\end{minted}
+	\caption{index.html mit Metatags um \glspl{acr-aci} bereitzustellen}
+	\label{lst:rktReposHTML}
+\end{listing}
+
+\pagebreak
 
 \section{LXD / LXC}
 \label{sec:compLXD}
@@ -190,10 +208,10 @@ Auch wenn LXD nicht hauptsächlich dafür gedacht ist, Applikationen und Service
 	\begin{minted}[breaklines]{bash}
 lxc launch ubuntu:16.04 todos
 
-# Add web frontend
+# add web frontend
 lxc file push /service/frontend/index.html /usr/share/nginx/html
 
-# Add backend jar
+# add backend jar
 lxc file push /service/backend/target/todos-backend-0.0.1-SNAPSHOT.jar /home/app.jar
 
 
@@ -206,50 +224,157 @@ lxc exec todos -- /bin/bash
 
 exit
 	\end{minted}
-	\caption{Shellscript um LXD Container zu starten}
+	\caption{Shellbefehle um LXD Container zu starten}
 	\label{lst:lxdConfig}
 \end{listing}
 
-Durch dieses Vorgehen ist die Anwendung vollständig isoliert vom Hostsystem, allerdings von außen nicht aufrufbar, da LXD keine Änderungen am Netzwerk des Hostsystems vornimmt. Um einen Container von außen zugänglich zu machen muss zusätzlich eine Bridge auf dem Hostsystem konfiguriert und mit dem Container verknüpft werden.
-\todo{bash linux bridge, mehrere Container für jeden Service einen}
+Durch dieses Vorgehen ist die Anwendung vollständig isoliert vom Hostsystem, allerdings von außen nicht aufrufbar, da LXD keine Änderungen am Netzwerk des Hostsystems vornimmt. Um einen Container von außen zugänglich zu machen muss zusätzlich eine EthernetBridge auf dem Hostsystem konfiguriert und mit dem Container verknüpft werden.
 
 \subsection{Bewertung}
 \label{sec:compLXDBewertung}
+Wie man an \fref{lst:lxdConfig} erkennt, erwartet LXD wissen über die Bedienung von Linuxsystemen. Vor allem die Konfiguration des Containernetzwerks ist komplexer als bei Docker oder rkt. Da LXD für die Isolation von Betriebssystemen gedacht ist, gibt es keine Images für Runtimes oder \gls{acr-saas}-Angebote. Da LXD von Cannonical entwickelt wird, werden überwiegend Ubuntu Images angeboten. Da mehrere Prozesse in einem LXD Container gestartet werden können, ist die Verknüpfung dieser deutlich einfacher, allerdings muss der gesamte Container an das Hostsystem angebunden werden. Da LXD hierfür keine automatische Konfiguration anbietet, wird Linux Know-How benötigt. Zudem hat das isolieren der Services in einzelne Container den Vorteil, das gezielt die Aspekte der Anwendung skaliert werden können, die unter Last stehen.
 
-\begin{itemize}
-	\item komplexer zu nutzen, da lower Level
-	\item Network zwischen Containern nur mit Linux mitteln, wissen von Nöten
-	\item Betroffen von Linux-Kernel issues, keine Abstarktion
-	\item RESTful API nutzbar über Netz, steuerung ohne SSH, Access zu VM, ...
-\end{itemize}
+Der größte Vorteil von LXD gegenüber Docker oder rkt ist die REST-API. Diese erlaubt es, ohne Zugriff auf das Hostsystem Container zu steuern, Checkpoints zu erstellen und die Last eines Containers zu überwachen. Für diesen Zweck wird bei Docker ein Third-Party Orchestrirungstool, wie z.B. \gls{acr-k8} benötigt.
 
 \section{runc}
 \label{sec:compRunc}
 
+Wie in \fref{sec:standards} beschrieben ist das Interesse für einen Standard im Container-Umfeld so groß wie nie. Aus diesem Grund haben sich die meisten Firmen in der \gls{acr-oci} zusammengeschlossen und mit \texttt{runc} eine Implementierung des definierten Standards veröffentlicht. Diese findet bereits innerhalb Dockers (siehe \fref{fig:dockerStack}), wie auch bei \gls{acr-k8} in Form von \texttt{cri-o}.
+
 \subsection{Vorgehensweise}
 \label{sec:compRuncVorgehen}
+
+Im Gegensatz zu Docker, rkt oder LXD nutzt runc keine Images um einen Container zu spezifizieren, sondern 2 Dateien:
+\begin{itemize}
+	\item rootfs.tar \\
+	runc benötigt ein Verzeichnis, welches als Baseimage verwendet wird.
+	\item config.json \\
+	Konfiguration im JSON Format, die beschreibt, wie der Prozess innerhalb des rootfs ausgeführt werden soll.
+\end{itemize}
+
+Wie ein \texttt{rootfs.tar}-Archiv erstellt werden kann wurde bereit in \fref{sec:tarball} beschrieben. Eine weitere Möglichkeit ist das exportieren aus Docker (siehe \fref{lst:dockerExport})
+
+\begin{listing}[h]
+	\begin{minted}[breaklines]{bash}
+docker export \$(docker create -v /service/frontend:/usr/share/nginx/html nginx) | tar -C rootfs -xvf -
+	\end{minted}
+	\caption{Exportieren eines \texttt{rootfs} aus Docker Container}
+	\label{lst:dockerExport}
+\end{listing}
+
+Um einen Container mit runc zu starten wird zusätzlich eine config.json benötigt. Diese kann mit \mintinline{bash}{runc spec} erzeugt werden. Die dadurch erstellte Datei beinhaltet eine vorgegebene Spezifikation, die in \fref{lst:configJSON} auszugsweise zu sehen ist. Bei starten eines Containers mit der gegebenen Konfiguration wird eine isolierte Shell gestartet. Um einen anderen Prozess, beispielsweise nginx zu starten muss ein entsprechendes rootfs erstellt und in der Konfiguration die Schlüssel \mintinline{json}{{"args": ["sh"]}} und \mintinline{json}{{"process": {"terminal": true,}}} geändert werden. Dadurch ist es auch möglich, entkoppelte Container zu starten, vergleichbar mit dem Docker-\gls{acr-cli}-Argument \texttt{-d}.
+
+\begin{listing}[hp]
+	\begin{minted}[breaklines, breakafter=/]{json}
+{
+	"ociVersion": "1.0.0",
+	"process": {
+		"terminal": true,
+	"user": {
+		"uid": 0,
+		"gid": 0
+	},
+	"args": [
+		"sh"
+	],
+	"env": [
+		"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+		"TERM=xterm"
+	],
+	"cwd": "/",
+	"capabilities": {
+		"bounding": [
+			"CAP_AUDIT_WRITE",
+		],
+	},
+	"root": {
+		"path": "rootfs",
+		"readonly": true
+	},
+	"hostname": "runc",
+	"mounts": [
+	{
+		"destination": "/proc",
+		"type": "proc",
+		"source": "proc"
+	},
+	\end{minted}
+	\caption{Auszug aus Standardspezifikation durch den Aufruf von \mintinline{bash}{runc spec}}
+	\label{lst:configJSON}
+\end{listing}
+
 
 \subsection{Bewertung}
 \label{sec:compRuncBewertung}
 
-\begin{itemize}
-	\item OCI stdimpl
-	\item Low Level
-	\item OCI bundles, mehrere Dateien zur Steuerung (config json, rootfs tar)
-	\item Trend zu std, docker impl
-	\item keine Versicherung durch Signatur / Verschlüsselung
-	\item CRI-O für Kubernets
-\end{itemize}
+Die \gls{acr-oci} bietet mit runc eine standardisierte Container-Runtime, die eine einfache API besitzt und von den meisten Cloud-Firmen unterstützt wird. Dabei ist vor allem die Steuerung und Konfiguration durch die erstellte \texttt{config.json} einfach und verständlich. Zudem bietet runc die Möglichkeit, Container ohne root-Berechtigungen zu starten. Diese rootless Container sind deutlich sicherer, da sie die Isolation durch runc nicht umgehen können.
+
+Neben den Vorteilen sind die Nachteile an runc als Standalone Container-Runtime allerdings groß. So werden für jeden Container 2 Dateien benötigt, die nicht von runc verwaltet werden. Außerdem bietet runc keine Repositories für bestehende Images an. Ein weiterer großer Nachteil ist das erforderliche Wissen über Linux Kernel-Funktionen wie Capabilities oder Namespaces. Im Gegensatz zu rkt unterstützt runc auch keine automatische Prüfung der Signatur \citep{RktVsOtherProjects}. 
 
 \section{VM basierte Runtimes}
 \label{sec:compVMbased}
+"Container sind keine Sandbox" \citep{OpenSourcingGVisoraSandboxedContainerRuntime}. Die Isolation durch sie kann umgangen werden und somit Zugriff auf alle weiteren Container, Prozesse und die gesamte Infrastruktur erhalten werden. Um potentiell unsicheren Code dritter auf eigenen Servern auszuführen wurden vor Containern \glspl{acr-vm} genutzt. Diese sind allerdings, wie in \fref{chap:grundlagen} erläutert, langsamer. Dieses Problem haben Firmen wie Intel, HyperHQ und Google erkannt und durch eigene Implementation versucht zu lösen.
 
-Notes:
-\begin{itemize}
-	\item Mehr sicherheit, seperation Kernel
-	\item Weniger Performance, Einzelne Aufrufe, starten und stoppen, ... "teurer" 
-	\item Erklären KataContaienrs, gVisor (neue Runtime)
-\end{itemize}
+\subsection{Kata Containers}
+\label{sec:compVMbasedKata}
+
+Kata Containers ist eine Initiative von Intel und HyperHQ, die die Projekte Intel Clear Containers und runV zusammenlegt. Kata Containers vereint dabei die Performance von Containern und die Sicherheit von \glspl{acr-vm}. Um dies zu erreichen werden einzelne Container in ihrer eigenen VM gestartet und somit der Kernel für jeden Container isoliert (siehe \fref{fig:kataContainers}). Die gestarteten VMs sind dabei auf das Minimum an Funktionalität reduziert und sind somit deutlich leichtgewichtiger als vollwertige VMs.
+
+\begin{figure}[h]
+	\subfigure[Container mit z.B. Docker]{\includegraphics[width=0.49\textwidth]{bilder/container.pdf}}
+	\hfill
+	\subfigure[Kata Containers]{\includegraphics[width=0.49\textwidth]{bilder/kata.pdf}}
+	\caption{Kata Container im Vergleich zu Docker Container}
+	\label{fig:kataContainers}
+\end{figure}
+
+Vorteile dieser Herangehensweise ist die gegebene Sicherheit innerhalb eines Containers. Diese ist durch die extra VM Stufe so hoch wie in VMs und somit deutlich besser als bei Containern. Der größte Nachteil ist die langsamere Startzeit und der größere Footprint, da ein Extra Agent benötigt wird um Kata Containers zu starten.
+
+\subsection{gVisor}
+\label{sec:compVMbasedGVisor}
+
+Im Gegensatz zu Kata Containers wählt Google mit gVisor einen anderen Ansatz, welches Anfang März 2018 als Open Source Projekt veröffentlicht wurde \citep{OpenSourcingGVisoraSandboxedContainerRuntime}. Bei gVisor wird eine userspaced Implementation der meisten Systemaufrufe gestellt. Diese werden alternativ zum Kernel des Hostsystems aufgerufen (siehe \fref{fig:gVisor}). Durch diese Vorgehensweise ist es gVisor möglich, sicherer als Container und schneller als VMs zu sein.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/gVisor.png}
+		\caption{gVisor blockt Systemaufrufe zum Kernel ab \citep{OpenSourcingGVisoraSandboxedContainerRuntime}}
+		\label{fig:gVisor}		
+	\end{center}
+\end{figure}
+
+\pagebreak
+\subsection{Bewertung}
+\label{sec:compVMbasedBewertung}
+Sicherheit spielt aktuell in der Cloud eine große Rolle. Angriffe wie Dirty COW im Jahr 2016 haben aufgezeigt, wie unsicher Container gegen gewissen Angriffe sein können \citep{DirtyCOWCVE20165195}. Technologien wie gVisor oder Kata Containers helfen bei der Isolation durch und bleiben dabei weiterhin skalierbar, allerdings auf Kosten der Performance.
 
 \section{Fazit}
 \label{sec:compFazit}
+
+Die Auswahl an verschiedenen Container-Runtimes ist groß und wächst zunehmend. Dabei legen viele Runtimes seit 2015 Wert darauf, den von der \gls{acr-oci} spezifizierten Standard zu erfüllen. Dadurch ist es zunehmend einfacher möglich, eine Alternative Container-Runtime neben Docker zu wählen. Dabei bieten rkt, LXD oder auch gVisor verschiedene Vor- und Nachteile gegenüber Docker. \fref{tab:compRuntimesFazit} zeigt diese auf und bewertet die einzelnen untersuchten Container-Runtimes auf die folgenden Kriterien: 
+\begin{itemize}
+	\item Sicherheit
+	\item Einfachheit der Nutzung
+	\item Bereitstellen von Images
+	\item Performance / Skalierbarkeit
+\end{itemize}
+
+\todo{Fill out Table}
+
+\begin{table}[h]
+	\renewcommand{\arraystretch}{1.2}
+	\begin{center}
+		\begin{tabu}to 0.9\textwidth{@{}lcccc@{}}
+			\toprule
+			                & Sicherheit & Einfachheit & Bereitstellen von Images & Performance \\ \midrule
+			Docker          &            &             &                          &             \\
+			rkt             &            &             &                          &             \\
+			LXC / LXD       &            &             &                          &             \\
+			runc            &            &             &                          &             \\
+			gVisor          &            &             &                          &             \\
+			Kata Containers &            &             &                          &             \\ \bottomrule
+		\end{tabu}
+		\caption{Verschiedene Container-Runtimes im Vergleich}
+		\label{tab:compRuntimesFazit}
+	\end{center}
+\end{table}
