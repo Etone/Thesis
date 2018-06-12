@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Todo List - A Microservice architecture example</title>
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js"></script>
+
+    <!-- CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+
+    <style>
+        .table > tbody > tr:hover > td > span.showOnHover{
+            visibility: visible;
+        }
+        .table > tbody > tr > td > span.showOnHover{
+            visibility: hidden;
+        }
+        #network-alert{
+          visibility: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+      <div id="network-alert" class="alert alert-danger" data-alert="alert">Problem while connecting to Backend, please check that backend is running</div>
+      <h1 class="display-1 text-center py-5">Todos - A Microservice architecture Example</h1>
+        <div id="todos-controls" class="container py-4 justify-content-center">
+            <form>
+                <div class="form-row">
+                    <div class="col-9">
+                        <input type="text" class="form-control" placeholder="You have todo something?" v-model="text">
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" v-model="until">
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-success" v-on:click="add">Add Todo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="todos-active" class=container>
+            <h2 class="pb-3">Don't forget the following</h2>
+            <table class="table" v-if="todos && todos.length">
+                <tbody>
+                    <tr v-for="todo in todos" class="todo d-flex">
+                        <td class="col-8">
+                            <span class="text-left align-middle">{{todo.text}}</span>
+                        </td>
+                        <td class="col-3">
+                            <span class="text-right align-middle">{{todo.finishUntil | formatDate}}</span>
+                        </td>
+                        <td @click="finishTodo(todo.id)">
+                            <span class="showOnHover text-center align-middle">&times;</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="todos-done" class="container">
+            <h2>Great job finishing this</h2>
+            <table class="table" v-if="todos && todos.length">
+                <tbody>
+                    <tr v-for="todo in todos">
+                        <td>
+                            <span class="text-left align-middle">{{todo.text}}</span>
+                        </td>
+                        <td>
+                            <span class="text-right align-middle">{{todo.finishUntil | formatDate}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+		var vmIP = '';
+        var http = axios.create({
+            baseURL: 'http://172.28.128.3:8080/todos',
+            headers: {}
+        })
+
+        function updateTodos(self, target) {
+            http.get(target)
+                .then(response => {
+                    self.todos = response.data
+                })
+                .catch(error => {
+                    console.log(error.message);
+                    document.getElementById("network-alert").style.visibility = "visible";
+                })
+        }
+
+        function addTodo(target, text, until) {
+            var newTodo={};
+            newTodo.text = text;
+            newTodo.finishUntil=new Date(until);
+            newTodo.active=true;
+
+            http.post(target, newTodo)
+            .then(result => {
+                //Added todo, everything worked fine
+                updateTodos(active, 'active');
+            })
+            .catch(error => {
+                document.getElementById("network-alert").style.visibility = "visible";
+            })
+        }
+
+        var active = new Vue({
+            el: '#todos-active',
+            data: {
+                todos: []
+            },
+            mounted: function () {
+                updateTodos(this, 'active');
+            },
+            methods: {
+                finishTodo: function(todo){
+                    http.post('done/' + todo)
+                    .then(result => {
+                        //Todo moved to section done, reload
+                        updateTodos(done, 'done');
+                        updateTodos(this, 'active');
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        document.getElementById("network-alert").style.visibility = "visible";
+                    })
+                }
+            },
+        })
+
+        var ctrls = new Vue({
+            el: '#todos-controls',
+            data: {
+                text: null,
+                until: null,
+            },
+            methods: {
+                add: function () {
+                    addTodo('add', this.text, this.until);
+                },
+            }
+        })
+
+        var done = new Vue({
+            el: '#todos-done',
+            data: {
+                todos: []
+            },
+            mounted: function () {
+                var self = this;
+                updateTodos(self, 'done');
+            }
+        })
+
+        Vue.filter('formatDate', function(value){
+            if(value) {
+                return moment(String(value)).format('L')
+            }
+        })
+    </script>
+</body>
+
+</html>

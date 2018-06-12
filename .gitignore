@@ -18,7 +18,6 @@
 Vagrant/\.vagrant/
 Vagrant/\.sudo_as_admin_successful
 
-*.docx
 
 *.old\.tex
 
@@ -41,3 +40,27 @@ MicroserviceExample/backend/todos-backend/mvnw\.cmd
 MicroserviceExample/backend/todos-backend/\.idea/
 
 TeX/thesis\.run\.xml
+
+MicroserviceExample/backend/\.mvn/wrapper/maven-wrapper\.jar
+
+MicroserviceExample/backend/mvnw
+
+MicroserviceExample/backend/mvnw\.cmd
+
+MicroserviceExample/service/backend/\.idea/
+
+MicroserviceExample/service/backend/\.mvn/wrapper/maven-wrapper\.jar
+
+MicroserviceExample/service/backend/mvnw
+
+MicroserviceExample/service/backend/mvnw\.cmd
+
+MicroserviceExample/service/backend/out/
+
+MicroserviceExample/service/backend/target/
+
+MicroserviceExample/vm/\.vagrant/
+
+MicroserviceExample/vm/tools/
+
+MicroserviceExample/service/frontend/\.acbuild/

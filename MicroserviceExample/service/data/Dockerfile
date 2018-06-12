@@ -1,0 +1,7 @@
+FROM library/postgres
+
+ENV POSTGRES_USER docker
+ENV POSTGRES_PASSWORD docker
+ENV POSTGRES_DB todos
+
+EXPOSE 5432

@@ -10,6 +10,11 @@ Container werden häufig als leichtgewichtige \glspl{acr-vm} beschrieben. Dies i
 \end{figure}
 
 Dieses Kapitel behandelt alle benötigten Grundlagen, die zur Isolation eines Prozesses benötigt werden. Es werden vorhandene Standards wie die \gls{acr-oci} und benötigte Systemcalls wie \gls{acr-chroot} näher erläutert. Zudem wird beschrieben, wie die Isolation, die Container bieten, durch Systemmittel des Linux-Kernels selber erreicht werden kann.
+
+\section{Begriffe}
+\label{sec:grundlagenBegriffe}
+\todo{Image, Orchestation, Container (?)}
+
 \section{Standards}
 \label{sec:standards}
 Durch die immer größere Verwendung von Containern und die Verbreitung verschiedener Container-Runtimes ist die Standardisierung eine wichtige Aufgabe. Folgend werden Standardisierungsprojekte aufgezählt, die bestehenden Spezifikationen erläutert und aktuelle Aufgaben der Projekte näher betrachtet.
@@ -29,7 +34,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabu} to \textwidth{@{}lccX[4,l]X[5,r]@{}}
+		\begin{tabu} to 0.9\textwidth{@{}lccX[4,l]X[5,r]@{}}
 			\toprule
 			& \multicolumn{2}{c}{Standard} & \multicolumn{2}{c}{Container Runtime}\\
 			\cmidrule{2-5}
@@ -50,7 +55,7 @@ Wie in \fref{tab:ociVSappc} zu sehen, wurden einige Konzepte des \gls{acr-appc}-
 
 \subsection{Cloud Native Computing Foundation}
 \label{sec:cncf}
-Die \gls{acr-cncf} beschäftigt sich im Gegensatz zur \gls{acr-oci} nicht nur mit Containern, sondern der kompletten \gls{gls-cn}-Landschaft \citep{CNCFCloudNativeInteractiveLandscape}. Projekte wie \gls{acr-k8} und Prometheus werden durch die \gls{acr-cncf} weiterentwickelt und publiziert \cite{}. Da der Cloud-Native Entwicklungsprozess von Containern getragen wird, spielen Technologien wie containerd und rkt eine entscheidende Rolle für die \gls{acr-cncf}. Neben Container-Runtimes beinhaltet die \gls{acr-cncf} auch Projekte zur Orchestrierung von Containern, Logging und Monitoring dieser, wie auch Spezifikationen, zum Beispiel die TUF, eine Spezifikation die standardisiert, wie Softwarepakete upgedatet werden sollen \citep{CloudNativeComputingFoundation}.
+Die \gls{acr-cncf} beschäftigt sich im Gegensatz zur \gls{acr-oci} nicht nur mit Containern, sondern der kompletten \gls{gls-cn}-Landschaft \citep{CNCFCloudNativeInteractiveLandscape}. Projekte wie \gls{acr-k8} und Prometheus werden durch die \gls{acr-cncf} weiterentwickelt und publiziert. Da der Cloud-Native Entwicklungsprozess von Containern getragen wird, spielen Technologien wie containerd und rkt eine entscheidende Rolle für die \gls{acr-cncf} und sind ein großer Teil der \gls{gls-cn}-Landscape, wie in \fref{fig:cncfContainerLandscape} gezeigt. Neben Container-Runtimes beinhaltet die \gls{acr-cncf} auch Projekte zur Orchestrierung von Containern, Logging und Monitoring dieser, wie auch Spezifikationen, zum Beispiel die TUF, eine Spezifikation die standardisiert, wie Softwarepakete upgedatet werden sollen \citep{CloudNativeComputingFoundation}.
 
 \begin{figure}[H]
 	\begin{center}
@@ -74,7 +79,7 @@ Container isolieren einzelne Prozesse durch verschiedene Kernel-Technologien, di
 
 \begin{table}[H]
 	\begin{center}
-		\begin{tabu} to \textwidth{@{}lX[2,l]@{}}
+		\begin{tabu} to 0.9\textwidth{@{}lX[2,l]@{}}
 			\toprule
 			Controller 	& Ressource 												\\
 			\midrule
@@ -97,7 +102,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabu} to \textwidth{@{}ll@{}}
+		\begin{tabu} to 0.9\textwidth{@{}lX[2,l]@{}}
 			\toprule
 			Namespace			& Ressource				 				\\
 			\midrule
@@ -119,7 +124,7 @@ Namespaces abstrahieren einzelne Bereiche des \gls{acr-os}. Sie werden genutzt, 
 \label{sec:mount}
 Durch die Isolation eines Prozesses und der Bedingung, das Container unveränderlich sein sollen, stellt sich die Frage, wie man Containern dynamische Inhalte aus dem Host-System zur Verfügung stellt. Dies ist vor allem wichtig, wenn bei Veränderung der Umgebung nicht den Container neu gestartet werden soll. Sollte zum Beispiel eine neue Datei durch einen Webserver zur Verfügung gestellt werden, möchte man nicht den Container neu starten. Die Lösung dieses Problems ist der Unix-Systembefehl \texttt{mount}. 
 
-Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des Dateibaums angeheftet. Durch dieses vorgehen kann man Ordner vom Host-System  für das mit \gls{acr-chroot} isolierte Dateisystem des Containers zugänglich machen. Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Diese könnten durch den Aufruf von \texttt{chroot} nicht mehr aufgelöst werden.
+Mit diesem Befehl wird eine beliebige Dateihierarchie an eine andere Stelle des Dateibaums angeheftet. Durch dieses vorgehen kann man Ordner vom Host-System  für das mit \gls{acr-chroot} isolierte Dateisystem des Containers zugänglich machen. Dabei ist zu beachten, dass es sich bei dem gemounteten Ordner nicht um einen symbolischen Link handelt. Diese könnten durch den Aufruf von \texttt{chroot} nicht mehr aufgelöst werden, wie in \fref{fig:mountExample} zu sehen.
 
 \begin{figure}[h]
 	\centering
@@ -161,7 +166,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 
 \begin{table}[h]
 	\begin{center}
-		\begin{tabu}to \textwidth {@{}lX[2,l]X[3,l]@{}}
+		\begin{tabu}to 0.9\textwidth{@{}lX[2,l]X[3,l]@{}}
 			\toprule
 			Capability 		& Systemaufruf 			& Erklärung						\\
 			\midrule
@@ -184,13 +189,7 @@ Das leichteste dieser Konzepte sind Capabilities. Jedem Prozess, sowie jeder Dat
 \label{sec:windows}
 Viele Kernel-Features des Linux-Kernels erlauben eine Isolation und wurden teilweise spezifisch für diese entwickelt \citep{Namespaces7LinuxManualPage}. Seit 2016 können spezifisch Docker-Container auch unter Windows genutzt werden. Dabei trennt Microsoft Container in zwei verschiedene Isolationen auf.
 
-Windows Server Container 2016 sind ein nativer Windows Ansatz zur Isolation eines Prozesses. Dabei werden, wie bereits unter Linux Systemen, verschiedene Kernel-Technologien verwendet, um einen einzelnen Prozess zu isolieren. Der andere Ansatz sind Hyper-V Container. Diese sind eher \glspl{acr-vm} als Containers. Dabei ist der größte Unterschied, das Hyper-V Container eine minimale Installation eines Windows Betriebssystems nutzen, um auf diesem einzelne Isolationen zu erstellen, während Windows Server Container ein gemeinsames \gls{acr-os} Nutze, nämlich Windows Server
-
-\begin{figure}[h]
-	\missingfigure{Hyper-V vs WinServer2016 container}
-	\caption{Unterschiede der Isolation bei Containern unter Windows}
-	\label{fig:hypervVSwinserver}
-\end{figure}
+Windows Server Container 2016 sind ein nativer Windows Ansatz zur Isolation eines Prozesses. Dabei werden, wie bereits unter Linux Systemen, verschiedene Kernel-Technologien verwendet, um einen einzelnen Prozess zu isolieren (siehe \fref{fig:hypervVSwinserver}). Der andere Ansatz sind Hyper-V Container. Diese sind eher \glspl{acr-vm} als Containers. Dabei ist der größte Unterschied, das Hyper-V Container eine minimale Installation eines Windows Kernels nutzen, um auf diesem einzelne Isolationen zu erstellen, während Windows Server Container einn gemeinsamen Kernel nutzen.
 
 \section{Eigene Implementierung}
 \label{sec:eigeneImpl}
@@ -198,15 +197,7 @@ Um die in \fref{sec:funktionsweise} erläuterten Kernel-Features näher zu beleu
 
 \subsection{Erstellen eines tarballs}
 \label{sec:tarball}
-Bei einem tarball handelt es sich um ein komprimiertes Dateisystem. Dabei wird ein vollwertiges Linux-Dateisystem stark komprimiert, um es leichter zu versenden oder zusichern. Das Erzeugen eines tarballs ist durch das Tool buildroot einfach. Buildroot ist ein Unix-Tool, welches zur Erstellung von minimalistischen Linux-Distributionen für Embedded-Systems entworfen wurde. Es erlaubt aber auch, nur ein Dateisystem zu erzeugen, ohne Kernel oder Init-System. Dies ist entscheidend, da bei Containern der bestehende Kernel des Host-OS mitbenutzt wird (\textit{siehe \fref{fig:containerVsVm}}). Das Init-System, welches dazu dient, neue Prozesse zu starten, wird in einem Container ebenfalls nicht benötigt, da diese nur einen Prozess ausführen. Diese Features von buildroot erlauben es, ein \gls{gls-image} für Container zu erzeugen.
-
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{bilder/buildroot-menuconfig.png}
-		\caption{Buildroot Menü nach Start des Tools}
-		\label{fig:buildrootMenuConfig}
-	\end{center}
-\end{figure}
+Bei einem tarball handelt es sich um ein komprimiertes Dateisystem. Dabei wird ein vollwertiges Dateisystem stark komprimiert, um es leichter zu versenden oder zusichern. Das Erzeugen eines tarballs ist durch das Tool buildroot einfach. Buildroot ist ein Unix-Tool, welches zur Erstellung von minimalistischen Linux-Distributionen für Embedded-Systems entworfen wurde. Es erlaubt aber auch, nur ein Dateisystem zu erzeugen, ohne Kernel oder Init-System. Dies ist entscheidend, da bei Containern der bestehende Kernel des Host-OS mitbenutzt wird (\textit{siehe \fref{fig:containerVsVm}}). Das Init-System, welches dazu dient, neue Prozesse zu starten, wird in einem Container ebenfalls nicht benötigt, da diese nur einen Prozess ausführen. Diese Features von buildroot erlauben es, ein \gls{gls-image} für Container zu erzeugen.
 
 Zudem erlaubt es buildroot, einzelne Bibliotheken, wie zum Beispiel die Python-Runtime, beim Build-Prozess der Distribution zu integrieren. Nach dem Einstellen der benötigten Bibliotheken und dem deaktivieren der, für Container, unnötigen Features erzeugt Buildroot eine Config-Datei, die alle Änderungen beinhaltet. Durch das Starten des Build-Prozesses mit dem Befehl \texttt{make} wird die gewünschte Linux-Distribution erstellt. Am Ende dieses Prozesses liegt im Ordner \texttt{/buildroot/out/images/} das gewünschte Dateisystem \texttt{rootfs.tar}.
 
@@ -214,16 +205,16 @@ Zudem erlaubt es buildroot, einzelne Bibliotheken, wie zum Beispiel die Python-R
 \label{sec:isolieren}
 In \fref{sec:tarball} wurde ein Dateisystem mit der Python-Runtime erstellt. Dieses muss nun isoliert, ein Pythonprogramm in das Dateisystem gemounted und ausgeführt werden.
 
-Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt. 
+Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt. Durch den Aufruf aus \fref{lst:untarRootfs} ensteht die in \fref{fig:baumNachUntar} gezeigte Dateistruktur.
 
-\begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt]{bash}
-		cd /home
-		mkdir rootfs
-		cp rootfs.tar rootfs/
-		cd rootfs
-		sudo tar xvf rootfs.tar
-		sudo rm rootfs.tar
+\begin{listing}
+	\begin{minted}[breaklines]{bash}
+cd /home
+mkdir rootfs
+cp rootfs.tar rootfs/
+cd rootfs
+sudo tar xvf rootfs.tar
+sudo rm rootfs.tar
 	\end{minted}
 	\caption{Entpacken des buildroot tarballs nach /home/rootfs}
 	\label{lst:untarRootfs}
@@ -248,15 +239,15 @@ Der erstellte tarball wird durch folgende \gls{gls-bash}-Befehle entpackt.
 \end{figure}
 
 Um einen Prozess mit dem Wurzelverzeichnis \texttt{/home/rootfs/} auszuführen, ist lediglich der folgende Aufruf nötig.
-\begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt, breaklines, breakafter=/]{bash}
-		sudo chroot rootfs /usr/bin/python3.6 -m http.server
+\begin{listing}
+	\begin{minted}[breaklines, breakafter=/]{bash}
+sudo chroot rootfs /usr/bin/python3.6 -m http.server
 	\end{minted}
 	\caption{Shell-Command um Webserver mit definierter Wurzel zu starten}
 	\label{lst:pythonChrooted}
 \end{listing}
 
-Durch diesen wird ein Webserver auf Adresse \texttt{http://0.0.0.0:8000} ausgeführt, der alle ihm zugänglichen Dateien zum Download bereitstellt. Beim Aufrufen dieser Adresse erkennt man, dass der Webserver nur Zugriff auf die in \texttt{/home/rootfs/} liegenden Dateien hat.
+Durch diesen wird ein Webserver auf Adresse \texttt{http://0.0.0.0:8000} ausgeführt, der alle ihm zugänglichen Dateien zum Download bereitstellt. Beim Aufrufen dieser Adresse erkennt man, dass der Webserver nur Zugriff auf die in \texttt{/home/rootfs/} liegenden Dateien hat, wie in \fref{fig:chrootPythonWebserver} gezeigt.
 
 \begin{figure}[H]
 	\begin{center}
@@ -269,16 +260,16 @@ Durch diesen wird ein Webserver auf Adresse \texttt{http://0.0.0.0:8000} ausgef�
 Um weiterhin Zugriff auf dynamische Inhalte aus dem Host-System zu haben, kann man, wie in \fref{sec:mount} erklärt, entsprechende Verzeichnisse in das neue rootfs des Prozesses mounten.
 
 \begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt]{bash}
-		nsenter --mount=/proc/<PID isolierter Prozess>/ns/mnt \
-			mount --bind -o ro \
-				$PWD/readonly \
-				$PWD/rootfs/var/src
+	\begin{minted}[]{bash}
+nsenter --mount=/proc/<PID isolierter Prozess>/ns/mnt \
+mount --bind -o ro \
+$PWD/readonly \
+$PWD/rootfs/var/src
 	\end{minted}
 	\caption{Mounten von Verzeichnis \texttt{/readonly/} zu \texttt{/rootfs/var/src/}}
 \end{listing}
 
-Durch die Dateitrennung und den Aufruf von \texttt{chroot} tritt allerdings ein großes Problem auf. Der Python-Webserver wird mit erhöhten Rechten ausgeführt, da diese für den Aufruf von \texttt{chroot} benötigt werden.
+Durch die Dateitrennung und den Aufruf von \texttt{chroot} tritt allerdings ein großes Problem auf. Der Python-Webserver wird mit erhöhten Rechten ausgeführt, da diese für den Aufruf von \texttt{chroot} benötigt werden (siehe \fref{fig:chrootWhoami}).
 
 \begin{figure}[h]
 	\begin{center}
@@ -292,8 +283,8 @@ Dies führt zu vielen Problemen. Ein Prozess, der nur auf diese Weise isoliert w
 
 Um alle Prozesse des Hostsystems vor dem Container zu verstecken, muss der PID-Namespace des Container-Prozesses neu gemounted werden.
 \begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt,breaklines, breakafter=/]{bash}
-		sudo unshare -p --mount-proc=$PWD/rootfs/proc -f chroot rootfs /bin/sh
+	\begin{minted}[breaklines, breakafter=/]{bash}
+sudo unshare -p --mount-proc=$PWD/rootfs/proc -f chroot rootfs /bin/sh
 	\end{minted}
 	\caption{Remount des PID-Namespaces und Chroot einer Shell}
 \end{listing}
@@ -303,8 +294,8 @@ Beim Aufruf von \glqq \mintinline{bash}{ps aux}\grqq{} wird nur noch der Prozess
 Durch den folgenden Aufruf hat, die in \texttt{rootfs} gestartete \texttt{/bin/bash} nicht mehr die Möglichkeit, auf niedrigere Ports, wie Port 80 zu hören.
 
 \begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt,breaklines, breakafter=/]{bash}
-		capsh --drop=cap_net_bind_service --chroot=rootfs/ --
+	\begin{minted}[breaklines, breakafter=/]{bash}
+capsh --drop=cap_net_bind_service --chroot=rootfs/ --
 	\end{minted}
 	\caption{Entfernen der Capability um auf Port 80 zu hören}
 \end{listing}
@@ -314,9 +305,9 @@ Um vollständige Isolation des Containers zu erreichen, müssen Systemressourcen
 Um eine \gls{acr-cgroup} zu erstellen, muss ein Ordner unterhalb des Wurzelverzeichnisses erstellt werden. Um einen Prozess einer \gls{acr-cgroup} zuzuordnen, wird die PID des Prozesses in die Datei \texttt{/sys/fs/cgroup/CONTROLLER/CGROUPNAME/tasks} geschrieben.
 
 \begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt, breaklines, breakafter=/]{bash}
-		mkdir /sys/fs/cgroup/memory/container
-		echo $ContainerPID > /sys/fs/cgroup/memory/container/tasks
+	\begin{minted}[breaklines, breakafter=/]{bash}
+mkdir /sys/fs/cgroup/memory/container
+echo $ContainerPID > /sys/fs/cgroup/memory/container/tasks
 	\end{minted}
 	\caption{Erzeugen einer memory cgroup namens container}
 \end{listing}
@@ -324,40 +315,40 @@ Um eine \gls{acr-cgroup} zu erstellen, muss ein Ordner unterhalb des Wurzelverze
 Um festzusetzen, wie viel Arbeitsspeicher der isolierte Prozess nutzen darf, kann man innerhalb der \gls{acr-cgroup} einzelne Limits festlegen.
 
 \begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt, breaklines, breakafter=/]{bash}
-		echo "0" > /sys/fs/cgroup/memory/container/memory.swappiness
-		echo "100000000" > /sys/fs/cgroup/memory/container/memory.limit_in_bytes
+	\begin{minted}[breaklines, breakafter=/]{bash}
+echo "0" > /sys/fs/cgroup/memory/container/memory.swappiness
+echo "100000000" > /sys/fs/cgroup/memory/container/memory.limit_in_bytes
 	\end{minted}
 	\caption{Limitieren des Arbeitsspeichers und Memory-Swap deaktivieren}
 \end{listing}
 
 Um zu testen, ob die Zuweisung funktioniert und durch den isolierten Prozess maximal \tildeawesome100Mb Arbeitsspeicher belegt werden können, kann folgendes Python Programm aus \fref{lst:hungry-py} ausgeführt werden. \fref{fig:cgroupKilled} zeigt die Ausgabe des Prozesses, der sich in der \gls{acr-cgroup} container befindet.
 
-\begin{listing}[h]
-	\begin{minted}[xleftmargin=-75pt]{python}
-		#hungry.py - Eating up memory in 10Mb blocks
-		import time
-		
-		TEN_MEGABYTE = 10000000
-		
-		f = open("/dev/urandom", "rb")
-		data = bytearray()
-		i = 0
-		
-		while True:
-			data.extend(f.read(TEN_MEGABYTE))
-			i += 1
-			print("%dMb belegt" % (i*10,))
-			time.sleep(1)
+\begin{listing}[hp]
+	\begin{minted}[]{python}
+#hungry.py - Eating up memory in 10Mb blocks
+import time
+
+TEN_MEGABYTE = 10000000
+
+f = open("/dev/urandom", "rb")
+data = bytearray()
+i = 0
+
+while True:
+	data.extend(f.read(TEN_MEGABYTE))
+	i += 1
+	print("%dMb belegt" % (i*10,))
+	time.sleep(1)
 	\end{minted}
 	\caption{Python Programm hungry.py um Arbeitsspeicher zu verbrauchen}
 	\label{lst:hungry-py}
 \end{listing}
 
 
-\begin{figure}[h]
+\begin{figure}[hp]
 	 \begin{center}
-	 	\includegraphics[scale=1]{bilder/cgroup-container-killed.png}
+	 	\includegraphics[scale=1.3]{bilder/cgroup-container-killed.png}
 	 	\caption{Ausgabe des Pythonprogramms \texttt{hungry.py}}
 	 	\label{fig:cgroupKilled}
 	 \end{center}
