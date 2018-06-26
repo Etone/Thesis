@@ -57,6 +57,25 @@ spec:
 \section{Serverless}
 \label{sec:aktuellesServerless}
 
-Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal ob Amazon Lambdas oder andere \gls{acr-faas} Anbieter, im Hintergrund dieser Technologie stehen immer Container-Pools, die genutzt werden um einzelne minimale, zustandslose Funktionen auszuführen.
+Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal ob Amazon Lambdas oder andere \gls{acr-faas} Anbieter, im Hintergrund dieser Technologie stehen immer Container-Pools, die genutzt werden um einzelne minimale, zustandslose Funktionen auszuführen. Dabei muss sich ein Entwickler nicht um Container kümmern, diese werden vom \gls{acr-faas}-Provider aufgesetzt und orchestriert. Dieses Vorgehen hat große Vorteile für Entwickler und DevOps.
 
-\todo{Beschreibung Serveless Funktion, FaaS als Computing Unit, ...}
+\begin{itemize}
+	\item Kostenreduktion \\
+	\gls{acr-faas}-Provider berechnen nur die aktive Zeit, in der eine Funktion ausgeführt wird. Dadurch werden nur noch effektive Rechenzeiten in Rechnung gestellt
+	\item Weniger Unterhalt \\
+	Da weder einzelne Container noch eine Container-Plattform wie Kubernetes verwaltet, oder Server konfiguriert werden müssen, ist der Unterhalt für DevOps sehr gering.
+	\item Kaum Overhead \\
+	Für eine Applikation verhält sich die Serverless Funktion wie ein externer Service. Es ist keine Instanzierung notwendig.
+\end{itemize}
+
+Neben den Vorteilen gibt es allerdings auch deutliche Nachteile der Serverless-Herangehensweise gegenüber einer verbreiteteren "normalen" Strategie mit nativen Containern
+
+\begin{itemize}
+	\item Größere Applikationen \\
+	Container erlauben es einfacher komplexe und schwergewichtigere Applikationen in der Cloud zu hosten. Viele, vor allem ältere Applikationen sind häufig große Monolithen, die durch Container Stück für Stück in leichtgewichtigere Services aufgeteilt werden können.
+	\item Volle Kontrolle über Container \\
+	Die Bereitstellung durch Container erlaubt es, jeden einzelnen genauer zu steuern und Container-Cluster zu managen. Diese zusätzliche Kontrolle geht bei Serverless-Ansätzen verloren
+	\item Debugging, Monitoring und Testen \\
+	Durch das Abgeben der Verwaltung einzelner Container ist es schwerer, einzelne zu Debuggen, Monitoring für diese zu betreiben oder auf Logs des Container zuzugreifen. Diese sind essentiell um Fehler innerhalb der Software zu finden und zu beheben.
+\end{itemize}
+
