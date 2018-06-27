@@ -3,7 +3,7 @@
 
 \section{Motivation}
 \label{sec:motivation}
-Die Welt wird immer stärker vernetzt. Durch den Drang, Anwendungen für viele Nutzer zugänglich zu machen besteht der Bedarf an Cloud-Diensten wie Amazon Web Services.
+Die Welt wird immer stärker vernetzt. Durch den Drang, Anwendungen für viele Nutzer zugänglich zu machen besteht der Bedarf an Cloud-Diensten wie Amazon Web Services, Microsoft Azure oder IBM Bluemix.
 Eine dabei immer wieder auftretende Schwierigkeit ist es, die Skalierbarkeit der Services zu gewährleisten. Selbst wenn viele Nutzer gleichzeitig auf einen Service zugreifen, darf dieser nicht unter der Last zusammenbrechen.
 
 Bis vor einigen Jahren wurde diese Skalierbarkeit durch \glspl{acr-vm} gewährleistet. Doch neben großem Konfigurationsaufwand haben \glspl{acr-vm} auch einen großen Footprint und sind für viele  Anwendungen zu ineffizient. Eine Lösung für dieses Problem stellen Container dar.
@@ -12,10 +12,10 @@ Diese Arbeit gibt einen Einblick in das Thema Container-Virtualisierung und bean
 
 \section{Aufbau der Arbeit}
 \label{sec:aufbau}
-Zu Beginn der Arbeit werden benötigte Grundlagen der Technologie erläutert. Dabei werden bestehende Container-Standards betrachtet und alle benötigten Kernel-Funktionen erklärt, die in Container-Runtimes Verwendung finden. Um einen besseren Einblick in die Technologie zu geben wird gezeigt, wie man mit Bash-Befehlen ohne Container-Runtime einen Prozess von einem Host-OS trennt. Dabei wird darauf eingegangen, wie eine eigene Dateihierarchie isoliert werden kann, wie Namespaces dabei helfen Funktionen des Linux-Kernels zu virtualisieren und wie der isolierte Prozess sicherer ausgeführt werden kann.
+Zu Beginn der Arbeit werden benötigte Grundlagen der Technologie erläutert. Dabei werden bestehende Container-Standards betrachtet und alle benötigten Kernel-Funktionen erklärt, die in Container-Runtimes Verwendung finden. Um einen besseren Einblick in die Technologie zu geben wird gezeigt, wie man mit Bash-Befehlen ohne Container-Runtime einen Prozess von einem Host-OS isoliert. Dabei wird darauf eingegangen, wie eine eigene Dateihierarchie isoliert werden kann, wie Namespaces dabei helfen Funktionen des Linux-Kernels zu virtualisieren und wie der isolierte Prozess sicherer ausgeführt werden kann.
 
 Im Anschluss wird die Frage beantwortet, wie Docker die populärste Container-Technologie wurde. Dazu wird die Geschichte betrachtet und Probleme einzelner Technologien aufgezeigt. Zudem wird gezeigt, wie Innovation durch die Vereinfachung von Schnittstellen entstehen kann.
 
-Das folgende Kapitel vergleicht die aktuellen Container-Angebote Docker, rkt, LXD und runc miteinander und grenzt ab, wo welche Runtime Vorteile bietet, warum Docker nicht in jedem Fall die beste Lösung ist und welche Stärken und Schwächen andere Runtimes haben.
+Das folgende Kapitel vergleicht die aktuellen Container-Angebote Docker, rkt, LXD und runc miteinander und grenzt ab, wo welche Runtime Vorteile bietet, warum Docker nicht in jedem Fall die beste Lösung ist und welche Stärken und Schwächen andere Runtimes haben. Zudem wird ein Einblick in andere Ansätze der Isolierung mittels Container gegeben, indem die Runtimes Kata Containers und gVisor vorgestellt werden.
 
-Das abschließende Kapitel behandelt die aktuellen Themen Sicherheit, Orchestrierung und Serverless-Technologien, um aufzuzeigen, welche Bereiche bei der weiteren Arbeit an Containern betrachtet werden. Dabei wird auf die Orchestrierungsplattform Kubernetes, die Sicherheitslücke Dirty COW und die Function-as-a-Service Lösung OpenWhisk eingegangen.
+Das abschließende Kapitel behandelt die aktuellen Themen Sicherheit, Orchestrierung und Serverless-Technologien, um aufzuzeigen, welche Bereiche bei der weiteren Arbeit an Containern betrachtet werden können. Dabei wird auf die Orchestrierungsplattform Kubernetes, die Sicherheitslücke Dirty COW und aktuelle \gls{acr-faas} Lösungen eingegangen.
