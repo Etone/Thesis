@@ -1,9 +1,9 @@
 \chapter{Aktuelle Themen}
 \label{chap:aktuelles}
 
-Durch den enormen Anstieg der Containernutzung im Cloud-Umfeld werden zunehmend Probleme ersichtlich, die der in \fref{sec:funktionsweise} beschriebenen Funktionsweise geschuldet sind. Neben der Mitnutzung des Kernels und den damit verbundenen Risiken durch Bugs und sicherheitsrelevante Probleme ist auch die Verwaltung und Organisation der Container-Architekturen zunehmend schwieriger. Neben diesen Problemen entstehen aber auch neue Innovationen rund um Container, z.B. die Serverless-Technologien. Hierbei werden einzelne Module auf Cloud-Plattformen wie Amazon AWS ausgeführt, ohne das Entwickler etwas von Containern und Konfigurationen wissen müssen.
+Durch den enormen Anstieg der Containernutzung im Cloud-Umfeld werden zunehmend Probleme ersichtlich, die teilweise der in \fref{sec:funktionsweise} beschriebenen Funktionsweise geschuldet sind. Neben der Mitnutzung des Kernels und den damit verbundenen Risiken durch Bugs und sicherheitsrelevante Probleme ist auch die Verwaltung und Organisation der Container-Architekturen zunehmend schwieriger. Neben diesen Problemen entstehen aber auch neue Innovationen rund um Container, z.B. die Serverless-Technologien. Hierbei werden einzelne Module auf Cloud-Plattformen wie Amazon AWS ausgeführt, ohne das Entwickler etwas von Containern und Konfigurationen wissen müssen.
 
-Im folgenden Kapitel sollen aktuelle Probleme erläutert und potentielle Lösungen aufgezeigt werden. Zudem wird am Beispiel der Serverless-Technologie erklärt, wie Container aktuell Anwendung finden.
+Im folgenden Kapitel sollen aktuelle Probleme erläutert und potentielle Lö"-sun"-gen aufgezeigt werden. Zudem wird am Beispiel der Serverless-Technologie erklärt, wie Container aktuell Anwendung finden.
 
 \section{Security}
 \label{sec:aktuellesSecurity}
@@ -17,7 +17,9 @@ Viele dieser Probleme lassen sich aufgrund der in \fref{sec:funktionsweise} erkl
 \section{Orchestrierung}
 \label{sec:aktuellesOrchestrierung}
 
-Google setze bereits 2014 stark auf Container. So lief innerhalb Googles Cloud-Platform alles auf Containerbasis und Google startete 2 Milliarden Container jede Woche \citep{ContainersatScale}. Diese massive Zahl an Containern führte zur dringenden Not einer Software, die all diese Container verwaltet, startet, stoppt und überwacht. Dies führte 2014 zum Release der Software Kubernetes, einer Orchestrierungsplattform für containerisierte Anwendungen. \gls{acr-k8} erlaubt es, mittels einer \gls{acr-yml}-Konfiguration, wie in \fref{lst:k8yaml}, ein Cluster an Containern zu spezifizieren, skalieren und bereitzustellen. Dabei verwendet Kubernetes das Konzept Pods, welche die kleinste Einheit bildet. Zu beginn setze \gls{acr-k8} ausschließlich auf Docker Container, mittlerweile wird dies allerdings durch das \gls{acr-cri} vermieden. So können auch rkt, LXD oder beliebige andere Container-Runtimes in Clustern verwendet werden (siehe \fref{fig:k8cri}).
+\glsreset{acr-k8}
+
+Google setze bereits 2014 stark auf Container. So lief innerhalb Googles Cloud-Platform alles auf Containerbasis und Google startete 2 Milliarden Container jede Woche \citep{ContainersatScale}. Diese massive Zahl an Containern führte zur dringenden Not einer Software, die all diese Container verwaltet, startet, stoppt und überwacht. Dies führte 2014 zum Release der Software \gls{acr-k8}, einer Orchestrierungsplattform für containerisierte Anwendungen. \gls{acr-k8} erlaubt es, mittels einer \gls{acr-yml}-Konfiguration, wie in \fref{lst:k8yaml}, ein Cluster an Containern zu spezifizieren, skalieren und bereitzustellen. Dabei verwendet Kubernetes das Konzept Pods, welche die kleinste Einheit bildet. Zu beginn setze \gls{acr-k8} ausschließlich auf Docker Container, mittlerweile wird dies allerdings durch das \gls{acr-cri} vermieden. So können auch rkt, LXD oder beliebige andere Container-Runtimes in Clustern verwendet werden (siehe \fref{fig:k8cri}).
 
 \begin{listing}[hp]
 	\begin{minted}[breaklines, breakafter=/]{yaml}
@@ -49,33 +51,39 @@ spec:
 \end{listing}
 
 \begin{figure}[h]
-	\includegraphics[scale=1]{bilder/cri.pdf}
-	\caption{Container Runtime Interface Aufbau \citep{KubernetesDocumentation}}
-	\label{fig:k8cri}
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/cri.pdf}
+		\caption{Container Runtime Interface Aufbau \citep{KubernetesDocumentation}}
+		\label{fig:k8cri}
+	\end{center}
 \end{figure}
 
 \section{Serverless}
 \label{sec:aktuellesServerless}
 
-Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal ob Amazon Lambdas oder andere \gls{acr-faas} Anbieter, im Hintergrund dieser Technologie stehen immer Container-Pools, die genutzt werden um einzelne minimale, zustandslose Funktionen auszuführen. Dabei muss sich ein Entwickler nicht um Container kümmern, diese werden vom \gls{acr-faas}-Provider aufgesetzt und orchestriert. Dieses Vorgehen hat große Vorteile für Entwickler und DevOps.
+Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal ob Amazon Lambdas oder andere \gls{acr-faas} Anbieter, im Hintergrund dieser Technologie stehen immer Container, die genutzt werden um einzelne minimale, zustandslose Funktionen auszuführen. Dabei muss sich ein Entwickler nicht um Container kümmern, diese werden vom \gls{acr-faas}-Provider aufgesetzt und orchestriert. Dieses Vorgehen hat Vorteile wie auch Nachteile für Entwickler und DevOps, die in \fref{tab:serverlessAdvantagesDisadvantages} gegenüber gestellt werden.
 
-\begin{itemize}
-	\item Kostenreduktion \\
-	\gls{acr-faas}-Provider berechnen nur die aktive Zeit, in der eine Funktion ausgeführt wird. Dadurch werden nur noch effektive Rechenzeiten in Rechnung gestellt
-	\item Weniger Unterhalt \\
-	Da weder einzelne Container noch eine Container-Plattform wie Kubernetes verwaltet, oder Server konfiguriert werden müssen, ist der Unterhalt für DevOps sehr gering.
-	\item Kaum Overhead \\
-	Für eine Applikation verhält sich die Serverless Funktion wie ein externer Service. Es ist keine Instanzierung notwendig.
-\end{itemize}
+\begin{table}[h]
+	\renewcommand{\arraystretch}{2.5}
+	\begin{center}
+		\begin{tabu} to 0.9\textwidth{@{}X[1,l] X[1,r]@{}}
+			\toprule
+			Vorteile & Nachteile\\
+			\midrule
+			Kostenreduktion, da der \gls{acr-faas}-Provider nur die aktive Rechenzeit berechnet & Größere Applikationen, vor allem Monolithen, können die Vorteile von \gls{acr-faas} nicht nutzen\\
+			Weniger Unterhalt, da die Konfiguration sowie die Verwaltung der Container.Plattform dem Provider überlassen wird & Abgabe der Kontrolle über einzelne Container, die bei Serverless-Ansätzen nicht mehr gesteuert werden können\\
+			Reduktion des Overheads, da die Applikation die Serverless Funktion behandelt wie einen externen Service. Keine Instanzierung notwendig & Debugging, Monitoring und Testen der Anwendung im \gls{acr-faas}-Umfeld ist komplexer und teilweise unmöglich\\
+			\bottomrule
+		\end{tabu}
+		\caption{Vor- und Nachteile der Serverless-Technologie \citep{ContainersVsServerlessComputing}}
+		\label{tab:serverlessAdvantagesDisadvantages}
+	\end{center}
+\end{table}
 
-Neben den Vorteilen gibt es allerdings auch deutliche Nachteile der Serverless-Herangehensweise gegenüber einer verbreiteteren "normalen" Strategie mit nativen Containern
+\pagebreak
 
-\begin{itemize}
-	\item Größere Applikationen \\
-	Container erlauben es einfacher komplexe und schwergewichtigere Applikationen in der Cloud zu hosten. Viele, vor allem ältere Applikationen sind häufig große Monolithen, die durch Container Stück für Stück in leichtgewichtigere Services aufgeteilt werden können.
-	\item Volle Kontrolle über Container \\
-	Die Bereitstellung durch Container erlaubt es, jeden einzelnen genauer zu steuern und Container-Cluster zu managen. Diese zusätzliche Kontrolle geht bei Serverless-Ansätzen verloren
-	\item Debugging, Monitoring und Testen \\
-	Durch das Abgeben der Verwaltung einzelner Container ist es schwerer, einzelne zu Debuggen, Monitoring für diese zu betreiben oder auf Logs des Container zuzugreifen. Diese sind essentiell um Fehler innerhalb der Software zu finden und zu beheben.
-\end{itemize}
+\section{Fazit}
+\label{sec:aktuellesFazit}
+
+Die Container-Technologie entwickelt sich rasant weiter. Seien es neue Virtualisierungsansätze wie gVisor, Standardisierungen wie runC oder neue Anwendungsfälle wie Amazon Lambda. All diese Entwicklungen sorgen für einen rasanten Anstieg der Technologie. Firmen wie Google haben diesen Trend bereits 2013 ins Rollen gebracht. Der Anstieg der Popularität sorgt zunehmend für die Not an Tools im Container-Umfeld. Mit Kubernetes, Docker Swarm oder Cloud-Foundry sind diese Tools mittlerweile ausgereift. Eine Sättigung der Technologie ist nicht abzusehen, der Trend geht eher zu einer größeren Nutzung \citep{ExploringContainerSecurityDetectandManageanAttack}. All diese Gründe machen es für Firmen wie Amazon, Google oder Microsoft unausweichlich, sich mit der Technologie und Vertretern der Branche auseinanderzusetzen. Dabei dürfen neben Docker, dem größten und bekanntesten Anbieter einer Container-Lösung, auch andere Vertreter wie CoreOS mit rkt nicht außer Acht gelassen werden.
 
