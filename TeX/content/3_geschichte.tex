@@ -2,7 +2,7 @@
 \label{chap:geschichte}
 Um die Frage zu beantworten, wie Docker die führende Container-Technologie wurde, wird im Folgenden die Geschichte dieser betrachtet. Dabei liegt der Schwerpunkt auf Lösungen und Probleme der Technologien.
  
-\section{Container-Engines}
+\section{Container-Runtimes}
 \label{sec:lxc2containerd}
 Wie in \fref{tab:timelineContainers} zu sehen, sind Container keine neue Erfindung. Bereits 2008 wurde die erste volle Implementierung einer Container-Runtime mit LXC ver"-öffentlicht. Im folgenden Abschnitt wird ein Blick auf Container-Runtimes in der Vergangenheit geworfen und die Frage geklärt, wie Docker die erfolgreichste Runtime wurde.
 
@@ -62,7 +62,7 @@ Eine weitere wichtige Entwicklung von Google, neben \glspl{acr-cgroup} und \gls{
 \label{sec:geschichteDocker}
 Im Jahr 2013 kam der größte Durchbruch für die Container-Technologie. Mit dem Release der Software Docker explodierten Container in Popularität und Nutzung. Wie auch \gls{acr-cf} Warden setzte Docker zu Beginn auf \gls{acr-lxc}. Der größte Unterschied zu bestehenden Container-Runtimes ist aber das Angebot als Ecosystem. Docker erlaubt es, \glspl{gls-image} aus dem Internet zu nutzen und bietet mit Docker Hub eine Plattform, die es sehr einfach ermöglicht, neue \gls{acr-saas}-Angebote für Kunden zugänglich zu machen. Zudem bietet Docker eine deutlich vereinfachte Form der Konfiguration mit Dockerfiles an. Durch die einfache Nutzung mittels \gls{acr-cli} und der Möglichkeit, seine Services als \gls{gls-image} bereitzustellen gelang es Docker, unangefochten die meistgenutzte Container-Software zu werden.
 
-\section{Zusammenfassung}
+\section{Weiterführende Technologien}
 \label{sec:timeline}
 Anhand der Geschichte der Container-Technologien erkennt man, das die heutige Innovation auf dem Gebiet der Isolation und Virtualisierung stark durch Container angetrieben wird. Vor allem Docker und Google, aber auch Microsoft oder Amazon treiben die Technologie an. Dabei wird immer ein Fokus auf die einfachere Nutzung gelegt, sowie die Automatisierbarkeit einzelner Prozesse, wie dem Bereitstellen oder kompilieren einer Anwendung.
 
@@ -73,48 +73,42 @@ Anhand der Geschichte der Container-Technologien erkennt man, das die heutige In
 	\begin{center}
 		\begin{tabu}to 0.9\textwidth{@{}r <{\hskip 3pt} !{\timeline} X[2,l]@{}}
 			\toprule
-			\multicolumn{2}{c}{\textbf{Benötigte Technologien}}		\\
-			\midrule
-			1979 & Unix V7 mit chroot								\\
-			1998 & SELinux											\\
-				 & AppArmor											\\
-			1999 & Linux Capabilites								\\
-			2000 & FreeBSD Jails									\\
-			2001 & Linux VServer									\\
-			2002 & Linux namespaces									\\
-			2004 & Solaris Container								\\
-			2005 & Open VZ											\\
-			2006 & Google Process Container							\\
-			2007 & Process Container in Linux Kernel als \glspl{acr-cgroup}\\
-			2012 & Erste stabile Version der Sprache Go				\\
-			\midrule
-			\multicolumn{2}{c}{\textbf{Container-Runtimes}}			\\
-			\midrule
-			2008 & \gls{acr-lxc}									\\
-			2011 & \gls{acr-cf} Warden								\\
-			2013 & \gls{acr-lmctfy}									\\
-			     & \gls{acr-cf} Graden, Umstieg auf Go				\\
-			2014 & \Gls{acr-appc} Spezifikation Release				\\
-				 & Release rkt												\\
-			2015 & Release LXD												\\
-				 & Release runC												\\
-			2016 & Windows Containers								\\
-				 & \gls{acr-cf} Guardian Release, Support für runC	\\
-			2017 & Release containerd v1.0.0								\\
-				 & Release cri-o											\\
-			\midrule
-			\multicolumn{2}{c}{\textbf{Entwicklung Container-Ecosystem}}\\
-			\midrule
-			2011 & Initialer Release \gls{acr-cf}					\\
-			2013 & Release Docker, erstes Container Ecosystem		\\
-			2014 & Entwicklung \gls{acr-k8} startet					\\
-			2015 & Gründung \gls{acr-cncf} und \gls{acr-oci}		\\
-				 & Docker Swarm										\\
-			2016 & "Dirty Cow" $\rightarrow$ Container Sicherheit	\\
-				 & Apache Mesos v1.0.0 Release						\\
-			2017 & Übernahme rkt und containerd in \gls{acr-cncf}	\\
-				 & Release \gls{acr-oci} runtime-spec und image-spec\\
-			\bottomrule
+			      \multicolumn{2}{c}{\textbf{Benötigte Technologien}}       \\ \midrule
+			1979 & Unix V7 mit chroot                                       \\
+			1998 & SELinux                                                  \\
+			     & AppArmor                                                 \\
+			1999 & Linux Capabilites                                        \\
+			2000 & FreeBSD Jails                                            \\
+			2001 & Linux VServer                                            \\
+			2002 & Linux namespaces                                         \\
+			2004 & Solaris Container                                        \\
+			2005 & Open VZ                                                  \\
+			2006 & Google Process Container                                 \\
+			2007 & Process Container in Linux Kernel als \glspl{acr-cgroup} \\
+			2012 & Erste stabile Version der Sprache Go                     \\ \midrule
+			        \multicolumn{2}{c}{\textbf{Container-Runtimes}}         \\ \midrule
+			2008 & \gls{acr-lxc}                                            \\
+			2011 & \gls{acr-cf} Warden                                      \\
+			2013 & \gls{acr-lmctfy}                                         \\
+			     & \gls{acr-cf} Graden, Umstieg auf Go                      \\
+			2014 & \Gls{acr-appc} Spezifikation Release                     \\
+			     & Release rkt                                              \\
+			2015 & Release LXD                                              \\
+			     & Release runC                                             \\
+			2016 & Windows Containers                                       \\
+			     & \gls{acr-cf} Guardian Release, Support für runC          \\
+			2017 & Release containerd v1.0.0                                \\
+			     & Release cri-o                                            \\ \midrule
+			 \multicolumn{2}{c}{\textbf{Entwicklung Container-Ecosystem}}   \\ \midrule
+			2011 & Initialer Release \gls{acr-cf}                           \\
+			2013 & Release Docker, erstes Container Ecosystem               \\
+			2014 & Entwicklung \gls{acr-k8} startet                         \\
+			2015 & Gründung \gls{acr-cncf} und \gls{acr-oci}                \\
+			     & Docker Swarm                                             \\
+			2016 & "Dirty Cow" $\rightarrow$ Container Sicherheit           \\
+			     & Apache Mesos v1.0.0 Release                              \\
+			2017 & Übernahme rkt und containerd in \gls{acr-cncf}           \\
+			     & Release \gls{acr-oci} runtime-spec und image-spec        \\ \bottomrule
 		\end{tabu}
 		\caption{Timeline Container-Technologien \citep{ABriefHistoryofContainers:fromthe1970sto2017}}
 		\label{tab:timelineContainers}
