@@ -336,12 +336,68 @@ Sicherheit spielt aktuell in der Cloud eine große Rolle. Angriffe wie Dirty COW
 \section{Fazit}
 \label{sec:compFazit}
 
-Die Auswahl an verschiedenen Container-Runtimes ist groß und wächst zunehmend. Dabei legen viele Runtimes seit 2015 Wert darauf, den von der \gls{acr-oci} spezifizierten Standard zu erfüllen. Dadurch ist es zunehmend einfacher möglich, eine Alternative Container-Runtime neben Docker zu wählen. Dabei bieten rkt, LXD oder auch gVisor verschiedene Vor- und Nachteile gegenüber Docker. \fref{tab:compRuntimesFazit} zeigt diese auf und bewertet die einzelnen untersuchten Container-Runtimes auf die folgenden Kriterien: 
+Die Auswahl an verschiedenen Container-Runtimes ist groß und wächst zunehmend. Dabei legen viele Runtimes seit 2015 Wert darauf, den von der \gls{acr-oci} spezifizierten Standard zu erfüllen. Dadurch ist es zunehmend einfacher möglich, eine Alternative Container-Runtime neben Docker zu wählen. Dabei bieten rkt, LXD oder auch gVisor verschiedene Vor- und Nachteile gegenüber Docker. Folgend werden die untersuchten Runtimes gegenübergestellt und eine Empfehlung für den in \fref{sec:vorgehen} geschilderten Sachverhalt gegeben. Dabei werden vor allem die folgenden Kriterien betrachtet.
 \begin{itemize}
 	\item Sicherheit
 	\item Einfachheit der Nutzung
 	\item Bereitstellen von Images
-	\item Performance / Skalierbarkeit
+	\item Konfigurationsaufwand
 \end{itemize}
 
-\todo{Drawio Rating anhand von Skala Grün bis Rot, Logos und Kategorien}
+\subsection{Sicherheit}
+\label{sec:compFazitSec}
+
+
+Wie in \fref{fig:compFazitSec} zu sehen sind die in \fref{sec:compVMbased} deutlich sicherer als andere Runtimes. Sollte es gewünscht sein, potentiell gefährliche Software von unbekannten oder nicht vertrauenswürdigen Anbietern auszuführen, sollte definitiv auf eine Lösung wie Kata Containers oder gVisor gesetzt werden.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/rating-sec.pdf}
+		\caption{Gegenüberstellung der betrachteten Runtimes auf Sicherheit}
+		\label{fig:compFazitSec}
+	\end{center}
+\end{figure}
+
+\subsection{Einfachheit der Nutzung}
+\label{sec:compFazitEoU}
+
+\fref{fig:compFazitEoU} zeigt die Stärke Dockers gegenüber anderen Anbietern. Durch die große Community, die Anzahl der vorhandenen Images auf der \gls{acr-saas}-Plattform Docker Hub und die gut dokumentierte API ist Docker die am einfachsten nutzbare Container-Runtime. Die \gls{acr-oci}-konformen Runtimes runC, Kata Containers und gVisor befinden sich etwa auf dem selben Level, da sie alle die selbe, standardisierte Vorgehensweise nutzen. Zum Zeitpunkt der Arbeit konnten allerdings nicht alle Services mit gVisor isoliert werden, da nicht alle benötigten Systemcalls implementiert waren. Im Zusammenspiel mit Docker hatten all diese Runtimes das selbe Level Komfort wie Docker und konnten die gleichen Images nutzen. Dies liegt an der in \fref{fig:dockerStack} gezeigten Architektur und der Austauschbarkeit von runC in dieser.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/rating-eou.pdf}
+		\caption{Gegenüberstellung der betrachteten Runtimes auf die Einfachheit der Nutzung}
+		\label{fig:compFazitEoU}
+	\end{center}
+\end{figure}
+
+\subsection{Verbreiten von Images}
+\label{sec:comFazitShare}
+
+Das Bereitstellen von Images ist im Containerumfeld essentiell, um schnell Änderungen auf Cloud-Providern aufzuspielen. die Container-Runtime rkt bietet dafür die einfache Möglichkeit der Meta-Discovery, mit der es einfach fällt, Images weiterzureichen. Da der \gls{acr-oci} Standard nur wenig zur image-distribution spec aussagt ist es bislang nur schwer Möglich, ein Repository anzubieten, dass es einem ermöglichen würde, Images zu teilen. Dazu kommt bislang der Docker Hub und Tools zur Konvertierung der Docker Images zum Einsatz. LXD bietet ein Repository für verschiedene Container-Images an, allerdings ist die Auswahl der Images sehr reduziert und es gibt keine Möglichkeit, ein bereits bestehendes, verändertes Images erneut zu nutzen, wie es mit Dockerfiles der Fall ist. 
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/rating-share.pdf}
+		\caption{Gegenüberstellung der betrachteten Runtimes auf die Möglichkeit, Images zu teilen und zu verbreiten}
+		\label{fig:compFazitShare}
+	\end{center}
+\end{figure}
+
+\subsection{Konfigurationsaufwand}
+\label{sec:compFazitConfig}
+
+Der Konfigurationsaufwand für das betreiben der betrachteten Runtimes ist erheblich unterschiedlich. Die Installation von Docker und rkt sind dank gestellter Scripte der Hersteller deutlich leichter als es bei Kata Containers der Fall ist. Bei dieser Runtime muss zusätzlich zur Installation der CLI auch der benötigte Agent installiert und konfiguriert werden. Neben der Installation ist die Konfiguration des Containers nennenswert. Während Docker mit dem Dockerfile eine einfache Syntax zur spezifikation eines Containers besitzt, sind bei anderen Runtimes, wie z.B. LXD Linuxkentnisse notwendig. 
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{bilder/rating-config.pdf}
+		\caption{Gegenüberstellung der betrachteten Runtimes auf den benötigten Konfigurationsaufwand}
+		\label{fig:comFazitConfig}
+	\end{center}
+\end{figure}
+
+\subsection{Empfehlung}
+\label{sec:compFazitEmpfehlung}
+
+Je nach Einsatzzweck können unterschiedliche Runtimes Vorteile bieten. So sollten sicherheitsrelevante Anwendungen oder Services, bei denen man von Sicherheitslücken weiß in sichereren Runtimes, wie z.B. in Kata Containers oder gVisor, isoliert werden. Falls man eine gute Allround-Lösung für das bereitstellen einer service-orientierten Anwendung benötigt und keine sicherheitsrelevanten Daten nutzt ist Docker die vermutlich beste Lösung. Die große Anzahl bereits bestehender Images und die aktive Community sind hierbei die Hauptgründe.
