@@ -1,25 +1,25 @@
 \chapter{Aktuelle Themen}
 \label{chap:aktuelles}
 
-Durch den enormen Anstieg der Containernutzung im Cloud-Umfeld werden zunehmend Probleme ersichtlich, die teilweise der in \fref{sec:funktionsweise} beschriebenen Funktionsweise geschuldet sind. Neben der Mitnutzung des Kernels und den damit verbundenen Risiken durch Bugs und sicherheitsrelevante Probleme ist auch die Verwaltung und Organisation der Container-Architekturen zunehmend schwieriger. Neben diesen Problemen entstehen aber auch neue Innovationen rund um Container, z.B. die Serverless-Technologien. Hierbei werden einzelne Module auf Cloud-Plattformen wie Amazon AWS ausgeführt, ohne das Entwickler etwas von Containern und Konfigurationen wissen müssen.
+Durch den enormen Anstieg der Containernutzung im Cloud-Umfeld werden zunehmend Probleme ersichtlich, die teilweise der in \fref{sec:funktionsweise} beschriebenen Funktionsweise geschuldet sind. Neben der Mitnutzung des Kernels und den damit verbundenen Risiken durch Bugs und sicherheitsrelevante Probleme ist auch die Verwaltung und Organisation der Container-Architekturen zunehmend schwieriger. Abseits dieser Probleme entstehen aber auch neue Innovationen rund um Container, z.B. die Serverless-Technologien. Hierbei werden einzelne Module auf Cloud-Plattformen wie AWS ausgeführt, ohne das Entwickler etwas von Containern und Konfigurationen wissen müssen.
 
 Im folgenden Kapitel sollen aktuelle Probleme erläutert und potentielle Lö"-sun"-gen aufgezeigt werden. Zudem wird am Beispiel der Serverless-Technologie erklärt, wie Container aktuell Anwendung finden.
 
 \section{Security}
 \label{sec:aktuellesSecurity}
 
-"Container sind keine Sandbox" \citep{OpenSourcingGVisoraSandboxedContainerRuntime}. Sandboxes sind ein Mechanismus, um laufende Programme zu separieren, damit Schwachstellen in einem Programm keine Auswirkungen auf andere Programme haben. Dies ist bei Containern nur bedingt der Fall. Schwachstellen in einzelnen Prozessen, die innerhalb eines Containers isoliert sind betreffen weitesgehend nur den isolierten Prozess. Sicherheitslücken im Linux-Kernel verbreiten sich allerdings vom Host in jeden Container und werden nicht isoliert.
+"Container sind keine Sandbox" \citep{OpenSourcingGVisoraSandboxedContainerRuntime}. Sandboxes sind ein Mechanismus, um laufende Programme zu separieren, damit Schwachstellen in einem Programm keine Auswirkungen auf andere Programme haben. Dies ist bei Containern nur bedingt der Fall. Schwachstellen in einzelnen Prozessen, die innerhalb eines Containers isoliert sind, betreffen weitestgehend nur den isolierten Prozess. Sicherheitslücken im Linux-Kernel verbreiten sich allerdings vom Host in jeden Container und werden nicht isoliert.
 
-Ein Beispiel für solch eine Lücke, die genutzt werden konnte, um administrative Rechte innerhalb eines Containers und somit Zugriff auf den übergelegenen Host zu erhalten, ist Dirty COW. Dabei handelte es sich um eine Schwachstelle im Linux-Kernel, die innerhalb der Hauptspeicherverwaltung zu einer Priviledge-Escalation führte \citep{DirtyCOWCVE20165195}. Noch heute sind einige Systeme, die für Container als Host dienen, von dieser Schwachstelle betroffen.
+Ein Beispiel für solch eine Lücke, die genutzt werden konnte, um administrative Rechte innerhalb eines Containers und somit Zugriff auf den übergelegenen Host zu erhalten, ist Dirty COW. Dabei handelte es sich um eine Schwachstelle im Linux-Kernel, die innerhalb der Hauptspeicherverwaltung zu einer Privilege-Escalation führte \citep{DirtyCOWCVE20165195}. Noch heute sind einige Systeme, die für Container als Host dienen, von dieser Schwachstelle betroffen.
 
-Viele dieser Probleme lassen sich aufgrund der in \fref{sec:funktionsweise} erklärten Funktionsweise von Containern nur schwer umgehen. Durch die größere Nutzung fallen allerdings immer mehr solcher Fehler im Linux-Kernel auf und können behoben werden. Um eine bessere Sicherheit zu gewähren kommen mittlerweile vermehrt die in \fref{sec:compVMbased} beschriebenen VM-basierten Container-Runtimes zum Einsatz.
+Viele dieser Probleme lassen sich aufgrund der in \fref{sec:funktionsweise} erklärten Funktionsweise von Containern nur schwer umgehen. Durch die größere Nutzung fallen allerdings immer mehr solcher Fehler im Linux-Kernel auf und können behoben werden. Um eine bessere Sicherheit zu gewähren, kommen mittlerweile vermehrt die in \fref{sec:compVMbased} beschriebenen VM-basierten Container-Runtimes zum Einsatz.
 
 \section{Orchestrierung}
 \label{sec:aktuellesOrchestrierung}
 
 \glsreset{acr-k8}
 
-Google setze bereits 2014 stark auf Container. So lief innerhalb Googles Cloud-Platform alles auf Containerbasis und Google startete 2 Milliarden Container jede Woche \citep{ContainersatScale}. Diese massive Zahl an Containern führte zur dringenden Not einer Software, die all diese Container verwaltet, startet, stoppt und überwacht. Dies führte 2014 zum Release der Software \gls{acr-k8}, einer Orchestrierungsplattform für containerisierte Anwendungen. \gls{acr-k8} erlaubt es, mittels einer \gls{acr-yml}-Konfiguration, wie in \fref{lst:k8yaml}, ein Cluster an Containern zu spezifizieren, skalieren und bereitzustellen. Dabei verwendet Kubernetes das Konzept Pods, welche die kleinste Einheit bildet. Zu beginn setze \gls{acr-k8} ausschließlich auf Docker Container, mittlerweile wird dies allerdings durch das \gls{acr-cri} vermieden. So können auch rkt, LXD oder beliebige andere Container-Runtimes in Clustern verwendet werden (siehe \fref{fig:k8cri}).
+Google setze bereits 2014 stark auf Container. So lief innerhalb Googles Cloud-Platform alles auf Containerbasis und Google startete 2 Milliarden Container jede Woche \citep{ContainersatScale}. Diese massive Zahl an Containern führte zur dringenden Not einer Software, die all diese Container verwaltet, startet, stoppt und überwacht. Dies führte 2014 zum Release der Software \gls{acr-k8}, einer Orchestrierungsplattform für containerisierte Anwendungen. \gls{acr-k8} erlaubt es, mittels einer \gls{acr-yml}-Konfiguration, wie in \fref{lst:k8yaml}, ein Cluster an Containern zu spezifizieren, skalieren und bereitzustellen. Dabei verwendet Kubernetes das Konzept Pods, welche die kleinste Einheit bildet. Zu Beginn setze \gls{acr-k8} ausschließlich auf Docker Container, mittlerweile wird dies allerdings durch das \gls{acr-cri} vermieden. So können auch rkt, LXD oder beliebige andere Container-Runtimes in Clustern verwendet werden (siehe \fref{fig:k8cri}).
 
 \begin{listing}[hp]
 	\begin{minted}[breaklines, breakafter=/]{yaml}
@@ -61,7 +61,7 @@ spec:
 \section{Serverless}
 \label{sec:aktuellesServerless}
 
-Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal ob Amazon Lambdas oder andere \gls{acr-faas} Anbieter, im Hintergrund dieser Technologie stehen immer Container, die genutzt werden um einzelne minimale, zustandslose Funktionen auszuführen. Dabei muss sich ein Entwickler nicht um Container kümmern, diese werden vom \gls{acr-faas}-Provider aufgesetzt und orchestriert. Dieses Vorgehen hat Vorteile wie auch Nachteile für Entwickler und DevOps, die in \fref{tab:serverlessAdvantagesDisadvantages} gegenüber gestellt werden.
+Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal ob Amazon Lambdas oder andere \gls{acr-faas} Anbieter, im Hintergrund dieser Technologie stehen immer Container, die genutzt werden, um einzelne minimale, zustandslose Funktionen auszuführen. Dabei muss sich ein Entwickler nicht um Container kümmern, diese werden vom \gls{acr-faas}-Provider aufgesetzt und orchestriert. Dieses Vorgehen hat Vorteile wie auch Nachteile für Entwickler und DevOps, die in \fref{tab:serverlessAdvantagesDisadvantages} gegenüber gestellt werden.
 
 \begin{table}[h]
 	\renewcommand{\arraystretch}{2.5}
@@ -72,7 +72,7 @@ Ein aktueller Anwendungsfall für Container ist die Serverless-Technologie. Egal
 			\midrule
 			Kostenreduktion, da der \gls{acr-faas}-Provider nur die aktive Rechenzeit berechnet & Größere Applikationen, vor allem Monolithen, können die Vorteile von \gls{acr-faas} nicht nutzen\\
 			Weniger Unterhalt, da die Konfiguration sowie die Verwaltung der Container.Plattform dem Provider überlassen wird & Abgabe der Kontrolle über einzelne Container, die bei Serverless-Ansätzen nicht mehr gesteuert werden können\\
-			Reduktion des Overheads, da die Applikation die Serverless Funktion behandelt wie einen externen Service. Keine Instanzierung notwendig & Debugging, Monitoring und Testen der Anwendung im \gls{acr-faas}-Umfeld ist komplexer und teilweise unmöglich\\
+			Reduktion des Overheads, da die Applikation die Serverless Funktion behandelt wie einen externen Service. Keine Instanziierung notwendig & Debugging, Monitoring und Testen der Anwendung im \gls{acr-faas}-Umfeld ist komplexer und teilweise unmöglich\\
 			\bottomrule
 		\end{tabu}
 		\caption{Vor- und Nachteile der Serverless-Technologie \citep{ContainersVsServerlessComputing}}
